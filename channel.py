@@ -2,6 +2,7 @@
 channel.py
 Channel object for GALFACTS transient search
 02 June 2014 - Trey Wenger - creation
+25 June 2014 - Modified to fit calgary's file stucture
 """
 import os
 import sys
@@ -11,7 +12,8 @@ class Channel(object):
     """Channel object for GALFACTS transient search"""
     def __init__(self, chan_num, beam_num, **options):
         """Initialize the channel object"""
-        self.chan_file = "{0}/{1}/{2}/beam{3}/fluxtime{4:04d}.dat".\
+        #added band0/run1/ to fit calgary's file structure
+        self.chan_file = "{0}/{1}/band0/run1/{2}/beam{3}/fluxtime{4:04d}.dat".\
           format(options["data_filepath"],
                  options["field"],
                  options["date"],
