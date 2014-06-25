@@ -4,8 +4,9 @@ Find sources in GALFACTS transient search
 03 June 2014 - Trey Wenger - creation
 12 June 2014 - Trey Wenger - fixed smoothing convolution normalization
                              bug in beam.py
+23 June 2014 - Joseph Kania - added binary option for file inputs                             
 """
-vers = "v1.0.1"
+vers = "v1.0.2"
 
 import sys
 import os
@@ -119,6 +120,9 @@ if __name__ == "__main__":
     semi_opt.add_argument('--width_req',type=float,
                           help='Source fit e_width/width requirement',
                           default=0.1)
+    semi_opt.add_argument("--binary", type=str,
+                          help="input files are in binary, default is ascii",
+                          default="ascii")
 #    semi_opt.add_argument('--dec',type=float,nargs=2,
 #                          metavar=('LOWER','UPPER'),
 #                          help="analyze only this declination range, "+
