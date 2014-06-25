@@ -2,7 +2,7 @@
 channel.py
 Channel object for GALFACTS transient search
 02 June 2014 - Trey Wenger - creation
-25 June 2014 - Modified to fit calgary's file stucture
+25 June 2014 - Modified to better handle missing fluxtimexxxx.dat files fit calgary's file stucture
 """
 import os
 import sys
@@ -19,9 +19,10 @@ class Channel(object):
                  options["date"],
                  beam_num,
                  chan_num)
-        ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
-        self.num_points = len(ra)
         self.error = (not os.path.isfile(self.chan_file))
+        if not self.error: 
+            ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
+            self.num_points = len(ra)
 
     def average(self):
         """Return the average Stokes for this channel"""
