@@ -120,7 +120,7 @@ if __name__ == "__main__":
     semi_opt.add_argument('--width_req',type=float,
                           help='Source fit e_width/width requirement',
                           default=0.1)
-    semi_opt.add_argument("--binary", type=str,
+    semi_opt.add_argument("--format", type=str,
                           help="input files are in binary, default is ascii",
                           default="ascii")
 #    semi_opt.add_argument('--dec',type=float,nargs=2,

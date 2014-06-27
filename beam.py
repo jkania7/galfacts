@@ -3,6 +3,7 @@ beam.py
 Beam object for GALFACTS transient search
 02 June 2014 - Trey Wenger - creation
 12 June 2014 - Trey Wenger - Fixed smoothing convolution norm. problem
+25 June 2014 - Joseph Kania - handling binary inputs
 """
 import sys
 import os
@@ -17,15 +18,19 @@ class Beam(object):
         """Initialize the beam object"""
         self.beam_num = beam_num
         self.options = options
-        self.channels = [channel.Channel(i, beam_num, **options) for
-                         i in xrange(options["num_channels"])]
-        # put error in channel zero. This is the Calgary average
-        self.channels[0].error = True
-        # put error in  ignored channels
-        if options["exclude_channels"] != None:
-            for c in options["exclude_channels"]:
-                self.channels[c].error = True
-
+        if self.options["format"] == "ascii":
+            self.channels = [channel.Channel(i, beam_num, **options) for
+                             i in xrange(options["num_channels"])]
+            # put error in channel zero. This is the Calgary average
+            self.channels[0].error = True
+            # put error in  ignored channels
+            if options["exclude_channels"] != None:
+                for c in options["exclude_channels"]:
+                    self.channels[c].error = True
+            elif self.options["format"] == "binary":
+                a = 2+2
+                #call binary object
+            
     def find_sources(self):
         """Algorithm to detect sources for this beam"""
         # generate results directory
@@ -411,7 +416,7 @@ def get_coordinates(beam_num, **options):
     num = options["num_channels"] - beam_num - 1
     # first, get the RA and AST from beam 0 then apply corrections
     temp_chan = channel.Channel(num, 0, **options)
-    RA, skipDEC, AST = temp_chan.get_coordinates()
+    RA, skipDEC, AST = temp_chan.get_coordinates()  
     # correct RA and AST for AST offset
     for i in xrange(len(AST)-1):
         AST[i] = AST[i] + (AST[i+1] - AST[i])*options["ast_offset"]

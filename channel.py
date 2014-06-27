@@ -12,17 +12,18 @@ class Channel(object):
     """Channel object for GALFACTS transient search"""
     def __init__(self, chan_num, beam_num, **options):
         """Initialize the channel object"""
-        #added band0/run1/ to fit calgary's file structure
-        self.chan_file = "{0}/{1}/band0/run1/{2}/beam{3}/fluxtime{4:04d}.dat".\
-          format(options["data_filepath"],
-                 options["field"],
-                 options["date"],
-                 beam_num,
-                 chan_num)
-        self.error = (not os.path.isfile(self.chan_file))
-        if not self.error: 
-            ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
-            self.num_points = len(ra)
+        if options["format"] == "ascii":
+           #Added band0/run1/ to fit calgary's file structure
+           self.chan_file = "{0}/{1}/band0/run1/{2}/beam{3}/fluxtime{4:04d}.dat".\
+             format(options["data_filepath"],
+                    options["field"],
+                    options["date"],
+                    beam_num,
+                    chan_num)
+           self.error = (not os.path.isfile(self.chan_file))
+           if not self.error: 
+               ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
+               self.num_points = len(ra)
 
     def average(self):
         """Return the average Stokes for this channel"""
