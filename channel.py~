@@ -21,22 +21,22 @@ class Channel(object):
                     beam_num,
                     chan_num)
            self.error = (not os.path.isfile(self.chan_file))
-           k=0
            try: 
                ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
                self.num_points = len(ra)
            except IOError:
-               k++
-
-           if k > 0 & options["verbose"] == True
-               print "Log: {0} channels not found".\
-                     format(k)
+               if options["verbose"]:
+                   print "{0} does not exist".\
+                         format(self.chan_file)
+               
     def average(self):
         """Return the average Stokes for this channel"""
-        ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
-        self.num_points = len(ra)
-        return (np.mean(I), np.mean(Q), np.mean(U), np.mean(V))
-
+        try:
+            ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
+            self.num_points = len(ra)
+            return (np.mean(I), np.mean(Q), np.mean(U), np.mean(V))
+        except IOError:
+            print "tried to access a non existent file"
     def add_points(self, Iarr, Qarr, Uarr, Varr):
         """Add these channel's points to the running I, Q, U, V total
            for each timestamp"""
@@ -45,8 +45,11 @@ class Channel(object):
 
     def get_coordinates(self):
         """Get the AST, RA, and DEC for this channel"""
-        ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
-        return ra, dec, ast
+        try:
+            ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
+            return ra, dec, ast
+        except IOError:
+            print "tried to access a non-existent file"
 
 if __name__ == "__main__":
     sys.exit("Error: module not meant to be run at top level.")
