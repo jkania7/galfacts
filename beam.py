@@ -11,6 +11,7 @@ import numpy as np
 import channel
 import make_plots as plt
 import source
+import random as rand
 
 class Beam(object):
     """Beam object for GALFACTS transient search"""
@@ -413,9 +414,13 @@ def get_coordinates(beam_num, **options):
     # just use some random channel number, but make it different
     # for each beam in case we multithread this - we probably don't
     # want to open the same file in two places at once
-    num = options["num_channels"] - beam_num - 1
+    while True:
+        num = rand.randint(1,options["num_channels"])
+        temp_chan = channel.Channel(num, 0, ** options)
+        if temp_chan.error == False:
+            break
     # first, get the RA and AST from beam 0 then apply corrections
-    temp_chan = channel.Channel(num, 0, **options)
+
     RA, skipDEC, AST = temp_chan.get_coordinates()  
     # correct RA and AST for AST offset
     for i in xrange(len(AST)-1):

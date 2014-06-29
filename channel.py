@@ -2,7 +2,8 @@
 channel.py
 Channel object for GALFACTS transient search
 02 June 2014 - Trey Wenger - creation
-25 June 2014 - Modified to better handle missing fluxtimexxxx.dat files fit calgary's file stucture
+25 June 2014 - Modified by jkania to better handle missing fluxtimexxxx.dat files fit calgary's file stucture
+28 June Modified by jkania to improve missing file handling 
 """
 import os
 import sys
@@ -22,15 +23,14 @@ class Channel(object):
                     chan_num)
            self.error = (not os.path.isfile(self.chan_file))
            k=0
-           try: 
+           try: #handles missing channels
                ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
                self.num_points = len(ra)
            except IOError:
-               k++
-
-           if k > 0 & options["verbose"] == True
-               print "Log: {0} channels not found".\
-                     format(k)
+               if options["verbose"] == True:
+                   print "Log: fluxtime{0}.dat not found".\
+                         format(chan_num)
+                   
     def average(self):
         """Return the average Stokes for this channel"""
         ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
