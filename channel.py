@@ -54,13 +54,9 @@ class Channel(object):
         
             if chan_num in cfg:
                 f = open(self.chan_file,"rb")
-                print "the type of chan_num {0}".\
-                      format(type(chan_num))
-                print "the type of cfg[chan_number][0] is {0}".\
-                      format(type(cfg[chan_num]))
-                print cfg[chan_num][0]
                 f.seek((cfg[chan_num])[0])
                 binary = f.read((cfg[chan_num])[1])
+                num = len(binary)/4 #floats are 4 bytes 
                 data = struct.unpack('{0}f'.format(num),bin_data)
                 ra = data[0::7]
                 dec = data[1::7]
