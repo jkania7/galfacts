@@ -56,8 +56,9 @@ class Channel(object):
                 f = open(self.chan_file,"rb")
                 f.seek((cfg[chan_num])[0])
                 binary = f.read((cfg[chan_num])[1])
-                num = len(binary)/4 #floats are 4 bytes 
-                data = struct.unpack('{0}f'.format(num),bin_data)
+                num = len(binary)/4 #floats are 4 bytes
+                print len(binary)
+                data = struct.unpack('{0}f'.format(num),binary)
                 ra = data[0::7]
                 dec = data[1::7]
                 ast = data[2::7]
