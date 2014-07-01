@@ -19,19 +19,15 @@ class Beam(object):
         """Initialize the beam object"""
         self.beam_num = beam_num
         self.options = options
-        if self.options["format"] == "ascii":
-            self.channels = [channel.Channel(i, beam_num, **options) for
-                             i in xrange(options["num_channels"])]
-            # put error in channel zero. This is the Calgary average
-            self.channels[0].error = True
-            # put error in  ignored channels
-            if options["exclude_channels"] != None:
-                for c in options["exclude_channels"]:
-                    self.channels[c].error = True
-            elif self.options["format"] == "binary":
-                a = 2+2
-                #call binary object
-            
+        self.channels = [channel.Channel(i, beam_num, **options) for
+                         i in xrange(options["num_channels"])]
+        # put error in channel zero. This is the Calgary average
+        self.channels[0].error = True
+        # put error in  ignored channels
+        if options["exclude_channels"] != None:
+             for c in options["exclude_channels"]:
+                self.channels[c].error = True
+                       
     def find_sources(self):
         """Algorithm to detect sources for this beam"""
         # generate results directory
