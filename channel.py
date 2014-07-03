@@ -18,8 +18,8 @@ class Channel(object):
         """Initialize the channel object"""
         if options["format"] == "ascii":
            #Added band0/run1/ to fit calgary's file structure
-           #self.chan_file = "{0}/{1}/band0/run1/{2}/beam{3}/fluxtime{4:04d}.dat".\
-           self.chan_file = "{0}/{1}/{2}/beam{3}/fluxtime{4:04d}.dat".\
+           #self.chan_file = "{0}/{1}/{2}/beam{3}/fluxtime{4:04d}.dat".\
+           self.chan_file = "{0}/{1}/band0/run1/{2}/beam{3}/fluxtime{4:04d}.dat".\
              format(options["data_filepath"],
                     options["field"],
                     options["date"],
@@ -55,9 +55,8 @@ class Channel(object):
             if chan_num in cfg:
                 f = open(self.chan_file,"rb")
                 f.seek((cfg[chan_num])[0])
-                binary = f.read((cfg[chan_num])[1])
+                binary = f.read((cfg[chan_num])[1]-2)
                 num = len(binary)/4 #floats are 4 bytes
-                print len(binary)
                 data = struct.unpack('{0}f'.format(num),binary)
                 ra = data[0::7]
                 dec = data[1::7]
@@ -66,6 +65,8 @@ class Channel(object):
                 Q = data[4::7]
                 U = data[5::7]
                 V = data[6::7]
+                print I
+
             else:
                 self.error = False
                 print "Log: fluxtime{0}.dat not in binary file".\
