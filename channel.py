@@ -45,50 +45,18 @@ class Channel(object):
                                     options["field"],
                                     options["date"],
                                     beam_num)
-             
-            chan, loc, length = np.loadtxt(cfg_file,dtype = 'int',unpack=True)
-            cfg = defaultdict(list)
-            for i in xrange(len(chan)):
-                cfg[chan[i]].append(loc[i])
-                cfg[chan[i]].append(length[i])
-        
-            if chan_num in cfg:
-                f = open(self.chan_file,"rb")
-                f.seek((cfg[chan_num])[0])
-                binary = f.read((cfg[chan_num])[1]-2)
-                num = len(binary)/4 #floats are 4 bytes
-                data = struct.unpack('{0}f'.format(num),binary)
-                ra = data[0::7]
-                dec = data[1::7]
-                ast = data[2::7]
-                I = data[3::7]
-                Q = data[4::7]
-                U = data[5::7]
-                V = data[6::7]
-                print I
+        cfg = self.cfg_read(cfg_file)
+        print cfg
+        print chan_num
+        ra,dec,ast,I,Q,U,V = self.bin_read(cfg, chan_num)
 
-            else:
-                self.error = False
-                print "Log: fluxtime{0}.dat not in binary file".\
-                      format(chan_num)
           
     def average(self):
         """Return the average Stokes for this channel"""
-        #if options["format"] == "ascii":
-        ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
+        if options["format"] == "ascii":
+            ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
         self.num_points = len(ra)
-        """else:
-            f = open(self.chan_file,"rb")
-            f.seek(cfg(self.chan_num)[0])
-            binary = f.read(cfg(self.chan_num)[1])
-            data = struct.unpack('{0}f'.format(num),bin_data)
-            ra = data[0::7]
-            dec = data[1::7]
-            ast = data[2::7]
-            I = data[3::7]
-            Q = data[4::7]
-            U = data[5::7]
-            V = data[6::7]"""
+        """else: """
         return (np.mean(I), np.mean(Q), np.mean(U), np.mean(V))
 
     def add_points(self, Iarr, Qarr, Uarr, Varr):
@@ -96,37 +64,44 @@ class Channel(object):
            for each timestamp"""
         #if options["format"] == "ascii":
         ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
-        """else:
-            f = open(self.chan_file,"rb")
-            f.seek(cfg(self.chan_num)[0])
-            binary = f.read(cfg(self.chan_num)[1])
-            data = struct.unpack('{0}f'.format(num),bin_data)
-            ra = data[0::7]
-            dec = data[1::7]
-            ast = data[2::7]
-            I = data[3::7]
-            Q = data[4::7]
-            U = data[5::7]
-            V = data[6::7]"""
+        """else:    """
         return (Iarr + I, Qarr + Q, Uarr + U, Varr + V)
 
     def get_coordinates(self):
         """Get the AST, RA, and DEC for this channel"""
         #if options["format"] == "ascii":
         ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
-        """else:
+        """else:"""
+        return ra, dec, ast
+
+    def bin_read(self, cfg, chan_num):
+        if chan_num in cfg:
             f = open(self.chan_file,"rb")
-            f.seek(cfg(self.chan_num)[0])
-            binary = f.read(cfg(self.chan_num)[1])
-            data = struct.unpack('{0}f'.format(num),bin_data)
+            f.seek((cfg[chan_num])["loc"]*7*4) #seek point * amount of data * size of floats
+            binary = f.read((cfg[chan_num])["num_rec"]*7*4) #number records* 7 data points * size of float
+            num = len(binary)/4 #floats are 4 bytes
+            data = struct.unpack('{0}f'.format(num),binary)
             ra = data[0::7]
             dec = data[1::7]
             ast = data[2::7]
             I = data[3::7]
             Q = data[4::7]
             U = data[5::7]
-            V = data[6::7]"""
-        return ra, dec, ast
+            V = data[6::7]
+            return ra, dec, ast, I, Q, U, V
 
+        else:
+            self.error = False
+            print "Log: fluxtime{0:04d}.dat not in binary file".\
+                  format(chan_num)
+
+
+    def cfg_read(self, cfg_file):
+        chan, loc, length = np.loadtxt(cfg_file,dtype = 'int',unpack=True)
+        cfg = {my_chan:{"loc":my_loc, "num_rec":my_rec} for my_chan, my_loc, my_rec in zip(chan,loc,length)}
+        return cfg
+
+        
+    
 if __name__ == "__main__":
     sys.exit("Error: module not meant to be run at top level.")
