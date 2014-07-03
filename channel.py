@@ -46,14 +46,12 @@ class Channel(object):
                                     options["date"],
                                     beam_num)
         cfg = self.cfg_read(cfg_file)
-        print cfg
-        print chan_num
         ra,dec,ast,I,Q,U,V = self.bin_read(cfg, chan_num)
 
           
     def average(self):
         """Return the average Stokes for this channel"""
-        if options["format"] == "ascii":
+        if self.options["format"] == "ascii":
             ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
         self.num_points = len(ra)
         """else: """
@@ -88,12 +86,21 @@ class Channel(object):
             Q = data[4::7]
             U = data[5::7]
             V = data[6::7]
-            return ra, dec, ast, I, Q, U, V
+            
 
         else:
             self.error = False
             print "Log: fluxtime{0:04d}.dat not in binary file".\
                   format(chan_num)
+            ra = 0
+            dec = 0
+            ast = 0
+            I = 0
+            Q = 0
+            U = 0
+            V = 0 
+            
+        return (ra, dec, ast, I, Q, U, V)       
 
 
     def cfg_read(self, cfg_file):
