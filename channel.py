@@ -16,6 +16,8 @@ class Channel(object):
     """Channel object for GALFACTS transient search"""
     def __init__(self, chan_num, beam_num, **options):
         """Initialize the channel object"""
+        self.options = options #to get options in lower functions
+        self.chan_num = chan_num
         if options["format"] == "ascii":
            #Added band0/run1/ to fit calgary's file structure
            #self.chan_file = "{0}/{1}/{2}/beam{3}/fluxtime{4:04d}.dat".\
@@ -34,7 +36,7 @@ class Channel(object):
                    print "Log: fluxtime{0}.dat not found".\
                          format(chan_num)
         else:
-            cfg_file = "{0}/{1}/band0/{2}/beam{3}/fluxtime.dat_cfg".\
+            self.cfg_file = "{0}/{1}/band0/{2}/beam{3}/fluxtime.dat_cfg".\
                        format(options["data_filepath"],
                               options["field"],
                               options["date"],
@@ -45,31 +47,36 @@ class Channel(object):
                                     options["field"],
                                     options["date"],
                                     beam_num)
-        cfg = self.cfg_read(cfg_file)
-        ra,dec,ast,I,Q,U,V = self.bin_read(cfg, chan_num)
+
+            ra,dec,ast,I,Q,U,V = self.bin_read(self.cfg_read(self.cfg_file), chan_num)
 
           
     def average(self):
         """Return the average Stokes for this channel"""
         if self.options["format"] == "ascii":
             ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
+        else:
+            ra,dec,ast,I,Q,U,V = self.bin_read(self.cfg_read(self.cfg_file), self.chan_num)
+        
         self.num_points = len(ra)
-        """else: """
         return (np.mean(I), np.mean(Q), np.mean(U), np.mean(V))
 
     def add_points(self, Iarr, Qarr, Uarr, Varr):
         """Add these channel's points to the running I, Q, U, V total
            for each timestamp"""
-        #if options["format"] == "ascii":
-        ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
-        """else:    """
+        if options["format"] == "ascii":
+            ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
+        else:
+            ra,dec,ast,I,Q,U,V = self.bin_read(self.cfg_read(self.cfg_file), self.chan_num)
+        
         return (Iarr + I, Qarr + Q, Uarr + U, Varr + V)
 
     def get_coordinates(self):
         """Get the AST, RA, and DEC for this channel"""
-        #if options["format"] == "ascii":
-        ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
-        """else:"""
+        if options["format"] == "ascii":
+            ra,dec,ast,I,Q,U,V = np.loadtxt(self.chan_file,unpack=True)
+        else:
+            ra,dec,ast,I,Q,U,V = self.bin_read(self.cfg_read(self.cfg_file), self.chan_num)     
         return ra, dec, ast
 
     def bin_read(self, cfg, chan_num):
@@ -87,18 +94,18 @@ class Channel(object):
             U = data[5::7]
             V = data[6::7]
             
-
         else:
             self.error = False
-            print "Log: fluxtime{0:04d}.dat not in binary file".\
-                  format(chan_num)
-            ra = 0
-            dec = 0
-            ast = 0
-            I = 0
-            Q = 0
-            U = 0
-            V = 0 
+            if self.options["verbose"] = True:
+                print "Log: fluxtime{0:04d}.dat not in binary file".\
+                      format(chan_num)
+            ra = [0]*10
+            dec = [0]*10
+            ast = [0]*10
+            I = [0]*10
+            Q = [0]*10
+            U = [0]*10
+            V = [0]*10 
             
         return (ra, dec, ast, I, Q, U, V)       
 
