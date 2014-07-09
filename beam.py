@@ -166,10 +166,17 @@ class Beam(object):
             # Average over channels
             if self.options["verbose"]:
                 print("Log: Averaging Stokes over channels in this bin")
-            I_data = np.zeros(self.channels[0].num_points)
-            Q_data = np.zeros(self.channels[0].num_points)
-            U_data = np.zeros(self.channels[0].num_points)
-            V_data = np.zeros(self.channels[0].num_points)
+            first_good = 0
+            for first_good in xrange(self.options["num_channels"]):  #makes sure the channel exisits before accessing
+                if not self.channels[first_good].error:
+                    break
+                if first_good == self.options["num_channels"]-1:
+                    print("Error: no channels")
+
+            I_data = np.zeros(self.channels[first_good].num_points)
+            Q_data = np.zeros(self.channels[first_good].num_points)
+            U_data = np.zeros(self.channels[first_good].num_points)
+            V_data = np.zeros(self.channels[first_good].num_points)
             num_good_points = 0.
             for c in xrange(start_chan,end_chan):
                 if self.channels[c].error: continue

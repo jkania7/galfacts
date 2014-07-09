@@ -123,6 +123,9 @@ if __name__ == "__main__":
     semi_opt.add_argument("--format", type=str,
                           help="input files are in binary, default is ascii",
                           default="ascii")
+    semi_opt.add_argument("--band", type=str,
+                          help="band0 or band1, default is band0",
+                          default="band0")
 #    semi_opt.add_argument('--dec',type=float,nargs=2,
 #                          metavar=('LOWER','UPPER'),
 #                          help="analyze only this declination range, "+

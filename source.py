@@ -95,4 +95,4 @@ def gauss_and_line(x, *p):
     #        amp*np.exp(-(x-center)**2/(2.*sigma**2)))
 
 if __name__ == "__main__":
-    sys.exit("Error: module not mean to be run from top level")
+    sys.exit("Error: module not meant to be run from top level")
