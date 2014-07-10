@@ -11,7 +11,6 @@ import sys
 import numpy as np
 import struct
 from collections import defaultdict
-import matplotlib.pyplot as plt
 
 class Channel(object):
     """Channel object for GALFACTS transient search"""
@@ -110,14 +109,19 @@ class Channel(object):
             Q = list(Q)
             U = list(U)
             V = list(V)
+            """
+            if chan_num%100 == 0:
+                txt = open("../out/chan{0}.txt".format(chan_num),"w")
+                for i in xrange(len(I)):
+                    txt.write("{0} {1} {2} {3} {4} {5} {6}\n".format(ra[i], dec[i], ast[i], I[i], Q[i], U[i], V[i]))
+                txt.close()
+            """
             return (ra, dec, ast, I, Q, U, V)
-
 
     def cfg_read(self, cfg_file):
         chan, loc, length = np.loadtxt(cfg_file,dtype = 'int',unpack=True)
         cfg = {my_chan:{"loc":my_loc, "num_rec":my_rec} for my_chan, my_loc, my_rec in zip(chan,loc,length)}
         return cfg
-
         
     
 if __name__ == "__main__":
