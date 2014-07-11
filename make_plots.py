@@ -7,6 +7,9 @@ by having these scripts separate.
 11 June 2014 - Joseph Kania - Editied
 12 June 2014 - Trey Wenger - Allow for running on headless machine
                              by using mpl "Agg"
+10 July 2014 - Trey Wenger - Updated source_plot to show all data
+                             around source, not just what went in
+                             to the fit
 """
 import sys
 import numpy as np
@@ -56,15 +59,17 @@ def single_stokes(x_data, xlabel, y_data, ylabel, filename):
     plt.savefig(filename)
     plt.close(fig)
 
-def source_plot(dec, I_data, residuals, fit_x, fit_y, filename):
+def source_plot(dec, I_data, all_dec, all_I_data, residuals,
+                fit_x, fit_y, filename):
     """Generate a plot of I vs dec for a single source"""
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
-    ax1.plot(dec, I_data, 'ko')
+    ax1.plot(all_dec, all_I_data, 'ko')
+    ax1.plot(dec, I_data, 'ro')
     ax1.plot(fit_x,fit_y,'k-')
     ax1.set_xlim(np.min(dec),np.max(dec))
     ax1.set_ylabel('Stokes I (K)')
     res_data = 100.*residuals/I_data
-    ax2.plot(dec,res_data,'ko')
+    ax2.plot(dec,res_data,'ro')
     ax2.set_ylim(-1,1)
     ax2.set_ylabel('Residuals (%)')
     ax2.set_xlabel('Dec (degs)')

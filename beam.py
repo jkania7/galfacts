@@ -4,6 +4,10 @@ Beam object for GALFACTS transient search
 02 June 2014 - Trey Wenger - creation
 12 June 2014 - Trey Wenger - Fixed smoothing convolution norm. problem
 25 June 2014 - Joseph Kania - handling binary inputs
+10 July 2014 - Trey Wenger - adds check for nan's and interpolation
+                             through missing data
+                             plot bad sources too
+                             print out list of rfi channels
 """
 import sys
 import os
@@ -12,6 +16,7 @@ import channel
 import make_plots as plt
 import source
 import random as rand
+import math
 
 class Beam(object):
     """Beam object for GALFACTS transient search"""
@@ -21,12 +26,15 @@ class Beam(object):
         self.options = options
         self.channels = [channel.Channel(i, beam_num, **options) for
                          i in xrange(options["num_channels"])]
+        self.elim_channels = []
         # put error in channel zero. This is the Calgary average
         self.channels[0].error = True
+        self.elim_channels.append( (0, 'calgary_average') )
         # put error in  ignored channels
         if options["exclude_channels"] != None:
              for c in options["exclude_channels"]:
                 self.channels[c].error = True
+                self.elim_channels.append( (c, 'excluded') )
                        
     def find_sources(self):
         """Algorithm to detect sources for this beam"""
@@ -90,10 +98,14 @@ class Beam(object):
         for i in xrange(self.options["edge_buff_chan"]):
             self.channels[i].error=True
             self.channels[-1-i].error=True
+            self.elim_channels.append( (i,"channel_edge") )
+            self.elim_channels.append( (self.options["num_channels"]-i,
+                                        "channel_edge") )
         # determine the minimum mean and std dev in our intervals
         interval_width = self.options["num_channels"]/\
           self.options["num_intervals"]
-        for data in [I_data, Q_data, U_data, V_data]:
+        for stokes,data in [("I",I_data), ("Q",Q_data),
+                            ("U",U_data), ("V",V_data)]:
             means = np.array([np.nanmean(data[i:i+interval_width])
                               for i in
                               range(0,self.options["num_channels"],
@@ -113,6 +125,13 @@ class Beam(object):
                       format(len(bad_chans)))
             for c in bad_chans:
                 self.channels[c].error = True
+                self.elim_channels.append( (c, 'rfi_stokes_{0}'.format(stokes)) )
+
+        # write eliminated channel list to a file
+        if self.options["file_verbose"]:
+            with open(results_dir+"/channels_eliminated.txt","w") as f:
+                for num,reason in self.elim_channels:
+                    f.write("{0} {1}\n".format(num,reason))
 
         # recompute Stokes averaged over time
         if self.options["verbose"]:
@@ -189,6 +208,62 @@ class Beam(object):
             Q_data /= num_good_points
             U_data /= num_good_points
             V_data /= num_good_points
+            if self.options["verbose"]:
+                print("Log: Interpolating through missing data")
+            # find and correct missing data
+            # loop over all points
+            i=0
+            while i < len(I_data):
+                # if we find a nan, let's record it and figure out
+                # how many nans there are, then linearly interpolate
+                # through those missing data
+                if I_data[i] < 0.: print(I_data[i])
+                if math.isnan(I_data[i]):
+                    j = i
+                    while j < len(I_data):
+                        # now we've found some data that is not
+                        # a nan, loop though until we find another
+                        # good number, then linearly interpolate
+                        # over nans
+                        if not math.isnan(I_data[j]):
+                            # this takes in to consideration that
+                            # the first nan could be the first data
+                            # point. If so, just use a flat line
+                            # between the beginning and the first
+                            # non-nan
+                            if i == 0:
+                                first = j
+                            else:
+                                first = i-1
+                            # calculate slope over linear interp.
+                            I_slope = (I_data[j]-I_data[first])/\
+                              (j - (i-1))
+                            Q_slope = (Q_data[j]-Q_data[first])/\
+                              (j - (i-1))
+                            U_slope = (U_data[j]-U_data[first])/\
+                              (j - (i-1))
+                            V_slope = (V_data[j]-V_data[first])/\
+                              (j - (i-1))
+                            # apply linear interp.
+                            for k in range(i,j):
+                                I_data[k] = I_data[first] + I_slope*(k-i+1)
+                                Q_data[k] = Q_data[first] + Q_slope*(k-i+1)
+                                U_data[k] = U_data[first] + U_slope*(k-i+1)
+                                V_data[k] = V_data[first] + V_slope*(k-i+1)
+                            i = j-1 # start i from j now
+                            break # break out and keep looking
+                        j += 1
+                    if j == len(I_data)-1:
+                        # if we get here, we didn't find any non-nans
+                        # before the end of the run
+                        # so let's just use a flat line
+                        I_data[i:] = I_data[i-1]
+                        Q_data[i:] = Q_data[i-1]
+                        U_data[i:] = U_data[i-1]
+                        V_data[i:] = V_data[i-1]
+                        break # all done!
+                i += 1
+                
             if self.options["verbose"]:
                 print("Log: Correcting coordinates.")
             RA, DEC, AST = get_coordinates(self.beam_num,
@@ -316,7 +391,7 @@ class Beam(object):
                 base2_end = base2_start+self.options["num_outer_points"]
                 if base2_end > len(AST): base2_end = len(AST)
                 # source is near end of observation
-                if base1_start < 0 or base2_end > len(AST):
+                if base1_start < 0 or base2_end >= len(AST):
                     time_end = True
                 this_RA = RA[base1_start:base1_end]
                 this_RA = np.append(this_RA,RA[source_start:source_end])
@@ -339,6 +414,13 @@ class Beam(object):
                 this_V_data = V_data[base1_start:base1_end]
                 this_V_data = np.append(this_V_data,V_data[source_start:source_end])
                 this_V_data = np.append(this_V_data,V_data[base2_start:base2_end])
+                all_RA = RA[base1_start:base2_end]
+                all_DEC = DEC[base1_start:base2_end]
+                all_AST = AST[base1_start:base2_end]
+                all_I_data = I_data[base1_start:base2_end]
+                all_Q_data = Q_data[base1_start:base2_end]
+                all_U_data = U_data[base1_start:base2_end]
+                all_V_data = V_data[base1_start:base2_end]
                 # sstart = max_point-25
                 # send = max_point+25
                 # if sstart < 0:
@@ -366,6 +448,9 @@ class Beam(object):
                 sources.append(source.Source(this_RA, this_DEC, this_AST,
                                              this_I_data, this_Q_data,
                                              this_U_data, this_V_data,
+                                             all_RA, all_DEC, all_AST,
+                                             all_I_data, all_Q_data,
+                                             all_U_data, all_V_data,
                                              time_end, dec_end))
                 # start next search from where this one left off
                 i = j
@@ -375,18 +460,17 @@ class Beam(object):
             good_sources = []
             bad_sources = []
             for s in range(len(sources)):
-                if sources[s].time_end or sources[s].dec_end:
+                # fit and plot
+                plt_filename = bin_results_dir+"/source{0:03d}".format(s)
+                sources[s].fit(plt_filename, **self.options)
+                if (sources[s].time_end or sources[s].dec_end or
+                    not sources[s].good_fit):
                     bad_sources.append(s)
                 else:
-                    plt_filename = bin_results_dir+"/source{0:03d}".format(s)
-                    sources[s].fit(plt_filename, **self.options)
-                    if sources[s].good_fit:
-                        good_sources.append(s)
-                    else:
-                        bad_sources.append(s)
+                    good_sources.append(s)
             if self.options["verbose"]:
                 print("Log: Fit {0} good sources.".format(len(good_sources)))
-                print("Log: Found {0} bad sources.".format(len(bad_sources)))
+                print("Log: Fit {0} bad sources.".format(len(bad_sources)))
             if self.options["file_verbose"]:
                 with open(bin_results_dir+"/good_sources.txt","w") as f:
                     f.write("# SourceNum centerRA centerDEC peakI widthDEC\n")
@@ -398,16 +482,16 @@ class Beam(object):
                                        sources[s].center_I,
                                        sources[s].fit_p[2]))
                 with open(bin_results_dir+"/bad_sources.txt","w") as f:
-                    f.write("# SourceNum Reasons\n")
+                    f.write("# SourceNum centerRA centerDEC Reasons\n")
                     for s in bad_sources:
-                        reasons = ""
                         if sources[s].dec_end:
-                            reasons = reasons+"DecChange,"
+                            sources[s].bad_reasons+="dec_change,"
                         if sources[s].time_end:
-                            reasons = reasons+"EndOfScan,"
-                        if not sources[s].good_fit:
-                            reasons = reasons+"BadFit,"
-                        f.write("{0:03d} {1}\n".format(s,reasons))
+                            sources[s].bad_reasons+="end_of_obs,"
+                        f.write("{0:03d} {1} {2} {3}\n".\
+                                format(s,sources[s].center_RA,
+                                       sources[s].center_DEC,
+                                       sources[s].bad_reasons))
             np.savez(bin_results_dir+"/sources",
                      sources=sources)
             

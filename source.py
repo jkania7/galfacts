@@ -3,6 +3,8 @@ source.py
 Source object for GALFACTS transiet search
 04 June 2014 - Trey Wenger - creation
 11 June 2014 - Joseph Kania - Modification
+10 July 2014 - Trey Wenger - plots both all data and data used for
+                             fit
 """
 import sys
 import numpy as np
@@ -12,6 +14,8 @@ from scipy.optimize import curve_fit
 class Source(object):
     """Source object for GALFACTS transient search"""
     def __init__(self, RA, DEC, AST, I_data, Q_data, U_data, V_data,
+                 all_RA, all_DEC, all_AST, all_I_data,all_Q_data,
+                 all_U_data,all_V_data,
                  time_end, dec_end):
         """Initialize the source object"""
         self.RA = RA
@@ -21,27 +25,39 @@ class Source(object):
         self.Q_data = Q_data
         self.U_data = U_data
         self.V_data = V_data
+        self.all_RA = all_RA
+        self.all_DEC = all_DEC
+        self.all_AST = all_AST
+        self.all_I_data = all_I_data
+        self.all_Q_data = all_Q_data
+        self.all_U_data = all_U_data
+        self.all_V_data = all_V_data
         self.time_end = time_end
         self.dec_end = dec_end
         self.fit_p = None
         self.e_fit_p = None
         self.good_fit = None
-        self.center_RA = None
-        self.center_DEC = None
+        self.center_RA = RA[len(RA)/2]
+        self.center_DEC = DEC[len(DEC)/2]
         self.I_baselined = None
         self.center_I = None
+        self.bad_reasons = ""
 
     def fit(self, filename, **options):
         """Fit the source I data vs. DEC with a Gaussian +
            linear baseline"""
+        # middle of data
         mid = len(self.I_data) / 2
-        amp_guess = self.I_data[mid] - self.I_data[0]
-        center_guess = self.DEC[mid]
-         # width in dec
-        sigma_guess = np.abs(self.DEC[mid+3] - center_guess)
+        # line guess
         slope_guess = (self.I_data[-1] - self.I_data[0])/(self.DEC[-1] -
                                                           self.DEC[0])
         y_int_guess = self.I_data[0] - slope_guess*self.DEC[0]
+        # gaussian guess
+        amp_guess = self.I_data[mid] - (slope_guess*self.DEC[mid]+y_int_guess)
+        center_guess = self.DEC[mid]
+        # width in dec
+        sigma_guess = np.abs(self.DEC[mid+3] - center_guess)
+        # fill the structure
         guess_p = [amp_guess, center_guess, sigma_guess, y_int_guess,
                    slope_guess]
         #guess_p = [amp_guess, center_guess, sigma_guess, y_int_guess,
@@ -54,9 +70,9 @@ class Source(object):
             self.fit_p = np.array(fit_p)
             self.covar = np.array(covar)
             if (np.isinf(fit_p).any() or np.isinf(covar).any() or
-                np.isnan(fit_p).any() or np.isnan(covar).any() or
-                (fit_p<0).any()):
+                np.isnan(fit_p).any() or np.isnan(covar).any()):
                 self.good_fit = False
+                self.bad_reasons+="fit_is_nan_or_inf,"
             else:
                 self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                      for i in range(len(fit_p))])
@@ -75,16 +91,20 @@ class Source(object):
                     self.center_I = self.I_baselined[center_point]
                 else:
                     self.good_fit = False
+                    self.bad_reasons+="bad_fit_uncert,"
                 # for plotting
                 if options["file_verbose"]:
                     fit_x = np.linspace(self.DEC[0], self.DEC[-1], 100)
                     fit_y = gauss_and_line(fit_x, *fit_p)
-                    make_plots.source_plot(self.DEC, self.I_data, residuals,
+                    make_plots.source_plot(self.DEC, self.I_data,
+                                           self.all_DEC,self.all_I_data,
+                                           residuals,
                                            fit_x, fit_y, filename)
         except RuntimeError:
             if options["verbose"]:
                 print("Log: A fit did not converge.")
             self.good_fit = False
+            self.bad_reasons+="fit_no_converge,"
             
 
 def gauss_and_line(x, *p):
