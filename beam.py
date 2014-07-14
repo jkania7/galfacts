@@ -475,8 +475,8 @@ class Beam(object):
                 with open(bin_results_dir+"/good_sources.txt","w") as f:
                     f.write("# SourceNum centerRA centerDEC peakI widthDEC\n")
                     f.write("# --------- deg      deg       K     deg\n")
-                    for s in good_sources:
-                        f.write("{0:03d} {1:.3f} {2:.3f} {3:.3f} {4:.3f}\n".\
+                    for s in good_sources: #jwk added tab delimiters 
+                        f.write("{0:03d}\t{1:.3f}\t{2:.3f}\t{3:.3f}\t{4:.3f}\n".\
                                 format(s,sources[s].center_RA,
                                        sources[s].center_DEC,
                                        sources[s].center_I,

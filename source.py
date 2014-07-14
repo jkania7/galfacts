@@ -99,7 +99,7 @@ class Source(object):
                     make_plots.source_plot(self.DEC, self.I_data,
                                            self.all_DEC,self.all_I_data,
                                            residuals,
-                                           fit_x, fit_y, filename)
+                                           fit_x, fit_y, filename, self.good_fit)
         except RuntimeError:
             if options["verbose"]:
                 print("Log: A fit did not converge.")
