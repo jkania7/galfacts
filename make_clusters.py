@@ -43,6 +43,8 @@ def main(**options):
                     options["field"],date,beam,this_bin)
                 if not os.path.isdir(my_in_dir):
                     continue
+                if not os.path.isfile(my_in_dir+"/sources.npz"):
+                    continue
                 data = np.load(my_in_dir+"/sources.npz")
                 num_good = 0
                 for s in data["sources"]:
@@ -176,7 +178,7 @@ if __name__ == "__main__":
                           help='theoretical noise level in Kelvin',
                           default=0.017)
     semi_opt.add_argument('--beam_width',type=float,
-                          help='Telescope beamwidth, guess for cluster fit',
+                          help='Telescope beamwidth in degrees, guess for cluster fit',
                           default=0.058)
     semi_opt.add_argument('--amp_req',type=float,
                           help='Source fit e_amplitude/amplitude requirement',
