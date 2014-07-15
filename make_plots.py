@@ -10,6 +10,7 @@ by having these scripts separate.
 10 July 2014 - Trey Wenger - Updated source_plot to show all data
                              around source, not just what went in
                              to the fit
+15 July 2014 - Joseph Kania - added titles to source plots
 """
 import sys
 import numpy as np
@@ -60,14 +61,13 @@ def single_stokes(x_data, xlabel, y_data, ylabel, filename):
     plt.close(fig)
 
 def source_plot(dec, I_data, all_dec, all_I_data, residuals,
-                fit_x, fit_y, filename, fit):
+                fit_x, fit_y, filename, fit, reason):
     """Generate a plot of I vs dec for a single source"""
     if fit:
         titl = " - good fit"
     else:
-        titl = " - bad fit"
-    titl =  filename.split("/")[-1] + titl
-    titl = filename.split(".")[0] + titl
+        titl = " - bad fit - "
+    titl =  (filename.split("/")[-1]).split(".")[0] + titl + reason
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
     ax1.plot(all_dec, all_I_data, 'ko')
     ax1.plot(dec, I_data, 'ro')
