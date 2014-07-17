@@ -82,9 +82,7 @@ def main(**options):
                                            n_samples=len(X))
             if options["verbose"]:
                 print("Log: found bandwidth {0}".format(bandwidth))
-            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
-            #consider taking out min_bin_freq, and cluster_all out when running on full field and not cal
-            #want to consider all points?
+            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True)
             ms.fit(X)
             labels = ms.labels_
             centers = ms.cluster_centers_
