@@ -89,10 +89,14 @@ def field_plot(ra, dec, I_data, filename,labels=None,centers=None):
     corr_ra = ra*np.cos(np.deg2rad(dec))
     if labels == None:
         sc = ax1.scatter(corr_ra,dec,c=I_data)
-        print("\n")
-        print type(sc)
-        print sc
-        print("\n")
+        # print("\n")
+        # print type(sc)
+        # print sc
+        # print("\n")
+        print len(ra)
+        print len(dec)
+        print len(I_data)
+        print I_data
         cb = plt.colorbar(sc)
         cb.set_label('Stokes I (K)')
     else:
@@ -103,11 +107,11 @@ def field_plot(ra, dec, I_data, filename,labels=None,centers=None):
             plt.plot(corr_ra[my_members],dec[my_members],col+'o')
             plt.plot(center[0],center[1],'o',markerfacecolor=col,
                      markeredgecolor='k', markersize=14, alpha=0.5)
-    plt.gca().invert_xaxis() # RA increase to left
-    ax1.set_xlabel('RA * cos(Dec) (deg)')
-    ax1.set_ylabel('Dec (deg)')
-    plt.savefig(filename)
-    plt.close(fig)
+            plt.gca().invert_xaxis() # RA increase to left
+            ax1.set_xlabel('RA * cos(Dec) (deg)')
+            ax1.set_ylabel('Dec (deg)')
+            plt.savefig(filename)
+            plt.close(fig)
 
 def field_plot_3d(ra, dec, I_data, fit_x, fit_y, fit_z, filename):
     fig, ax1 = plt.subplots(1,subplot_kw={"projection": '3d'})
