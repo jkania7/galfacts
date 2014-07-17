@@ -79,15 +79,23 @@ class Source(object):
                 self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                      for i in range(len(fit_p))])
                 residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
-                chisq, p = chisquare(gauss_and_line(self.DEC,*fit_p), f_exp=self.I_data)
-                print p
-                print len(gauss_and_line(self.DEC,*fit_p))
-                print len(self.I_data)
-                print gauss_and_line(self.DEC,*fit_p)
-                print self.I_data
-                self.bad_reasons+=" p is {0} ".format(p) #for testing
+                #chisq, p = chisquare(gauss_and_line(self.DEC,*fit_p), f_exp=self.I_data)
+                chisq = np.sum( (self.I_data - gauss_and_line(self.DEC,*fit_p))**2. / gauss_and_line(self.DEC,*fit_p) )
+                reduced_chisq = chisq / (len(self.I_data) - 1.)
+                #
+                # GET THE CRITICAL CHISQ
+                crit_chisq_data = np.genfromtxt('critical_chisq.tab',names=True,dtype=True)
+                critical_chisq = crit_chisq_data["crit_0.95"][len(self.I_data)-1]
+                #
+                # print p
+                # print len(gauss_and_line(self.DEC,*fit_p))
+                # print len(self.I_data)
+                # print gauss_and_line(self.DEC,*fit_p)
+                # print self.I_data
+                self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
                 if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
-                    np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"]):
+                    np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
+                    redurced_chisq < critical_chisq):
                     self.good_fit = True
                     #self.good_fit = False #to display chisqr for testing
                     # determine center properties by finding closest point
