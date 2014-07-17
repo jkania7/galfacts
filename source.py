@@ -68,74 +68,71 @@ class Source(object):
             fit_p, covar = curve_fit(gauss_and_line,  self.DEC,
                                      self.I_data, p0=guess_p,
                                      sigma=sigma)
-            self.fit_p = np.array(fit_p)
-            self.covar = np.array(covar)
-
-            print "Fit parameters"
-            print fit_p
-            print "Covariance matrix"
-            print covar
-            
-            if (np.isinf(fit_p).any() or np.isinf(covar).any() or
-                np.isnan(fit_p).any() or np.isnan(covar).any()):
-                self.good_fit = False
-                self.bad_reasons+="fit_is_nan_or_inf,"
-            else:
-                self.e_fit_p = np.array([np.sqrt(covar[i,i])
-                                     for i in range(len(fit_p))])
-                residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
-                #chisq, p = chisquare(gauss_and_line(self.DEC,*fit_p), f_exp=self.I_data)
-                dof = len(self.I_data) - len(fit_p) - 1 # degrees of freedom
-                chisq = np.sum( ( (self.I_data - gauss_and_line(self.DEC,*fit_p)) / options["sigma"] )**2. )
-                reduced_chisq = chisq / dof
-                #
-                # GET THE CRITICAL CHISQ
-                crit_chisq_data = np.genfromtxt('critical_chisq.tab',names=True)
-                critical_chisq = crit_chisq_data["crit_095"][dof-1]
-                #
-                print "I_data"
-                print self.I_data
-                print "Fit data"
-                print gauss_and_line(self.DEC,*fit_p)
-                print "Degrees of freedom"
-                print len(self.I_data)
-                print "Chi-sq"
-                print chisq
-                print "Reduced chi-sq"
-                print reduced_chisq
-                print "Critical chi-sq"
-                print critical_chisq
-                self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
-                if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
-                    np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
-                    reduced_chisq < critical_chisq):
-                    self.good_fit = True
-                    #self.good_fit = False #to display chisqr for testing
-                    # determine center properties by finding closest point
-                    # to center
-                    center_point = np.abs(self.DEC - self.fit_p[1]).argmin()
-                    self.center_RA = self.RA[center_point]
-                    self.center_DEC = self.DEC[center_point]
-                    self.I_baselined = (self.I_data -
-                                        (self.fit_p[3] +
-                                        self.fit_p[4]*self.DEC))
-                    self.center_I = self.I_baselined[center_point]
-                else:
-                    self.good_fit = False
-                    self.bad_reasons+="bad_fit_uncert,"
-                # for plotting
-                if options["file_verbose"]:
-                    fit_x = np.linspace(self.DEC[0], self.DEC[-1], 100)
-                    fit_y = gauss_and_line(fit_x, *fit_p)
-                    make_plots.source_plot(self.DEC, self.I_data,
-                                           self.all_DEC,self.all_I_data,
-                                           residuals,
-                                           fit_x, fit_y, filename, self.good_fit, self.bad_reasons)
         except RuntimeError:
             if options["verbose"]:
                 print("Log: A fit did not converge.")
             self.good_fit = False
             self.bad_reasons+="fit_no_converge,"
+            return
+            
+        self.fit_p = np.array(fit_p)
+        self.covar = np.array(covar)
+
+        print "Fit parameters"
+        print fit_p
+        print "Covariance matrix"
+        print covar
+        
+        if (np.isinf(fit_p).any() or np.isinf(covar).any() or
+            np.isnan(fit_p).any() or np.isnan(covar).any()):
+            self.good_fit = False
+            self.bad_reasons+="fit_is_nan_or_inf,"
+         else:
+            self.e_fit_p = np.array([np.sqrt(covar[i,i])
+                                 for i in range(len(fit_p))])
+            residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
+            #chisq, p = chisquare(gauss_and_line(self.DEC,*fit_p), f_exp=self.I_data)
+            dof = len(self.I_data) - len(fit_p) - 1 # degrees of freedom
+            chisq = np.sum( ( (self.I_data - gauss_and_line(self.DEC,*fit_p)) / options["sigma"] )**2. )
+            reduced_chisq = chisq / dof
+            #
+            print "I_data"
+            print self.I_data
+            print "Fit data"
+            print gauss_and_line(self.DEC,*fit_p)
+            print "Degrees of freedom"
+            print len(self.I_data)
+            print "Chi-sq"
+            print chisq
+            print "Reduced chi-sq"
+            print reduced_chisq
+            self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
+            if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
+                np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
+                reduced_chisq < 1.0):
+                self.good_fit = True
+                #self.good_fit = False #to display chisqr for testing
+                # determine center properties by finding closest point
+                # to center
+                center_point = np.abs(self.DEC - self.fit_p[1]).argmin()
+                self.center_RA = self.RA[center_point]
+                self.center_DEC = self.DEC[center_point]
+                self.I_baselined = (self.I_data -
+                                    (self.fit_p[3] +
+                                    self.fit_p[4]*self.DEC))
+                self.center_I = self.I_baselined[center_point]
+            else:
+                self.good_fit = False
+                self.bad_reasons+="bad_fit_uncert,"
+            # for plotting
+            if options["file_verbose"]:
+                fit_x = np.linspace(self.DEC[0], self.DEC[-1], 100)
+                fit_y = gauss_and_line(fit_x, *fit_p)
+                make_plots.source_plot(self.DEC, self.I_data,
+                                       self.all_DEC,self.all_I_data,
+                                       residuals,
+                                       fit_x, fit_y, filename,
+                                       self.good_fit, self.bad_reasons)
             
 
 def gauss_and_line(x, *p):
