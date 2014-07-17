@@ -96,7 +96,7 @@ def field_plot(ra, dec, I_data, filename,labels=None,centers=None):
         cb = plt.colorbar(sc)
         cb.set_label('Stokes I (K)')
     else:
-        colors = cycle('bgrcmykbgrcmykbgrcmykbgrcmyk')
+        colors = cycle('bgrcmykbgrcmykbgrcmykbgrcmy')
         for i,col in zip(range(len(centers)),colors):
             my_members = labels == i
             center = centers[i]

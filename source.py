@@ -80,7 +80,9 @@ class Source(object):
                                      for i in range(len(fit_p))])
                 residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
                 chisq, p = chisquare(gauss_and_line(self.DEC,*fit_p), f_exp=self.I_data)
-                self.bad_reason+="chisqr is {0}".format(chisq) #for testing
+                chisq = np.sum ()
+                reduced_chisq = chisq/( len(I_data) - 1 )
+                self.bad_reasons+="chisqr is {0}".format(chisq) #for testing
                 if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
                     np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
                     chisq<options["chisq"]):
