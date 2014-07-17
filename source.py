@@ -95,7 +95,7 @@ class Source(object):
                 self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
                 if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
                     np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
-                    redurced_chisq < critical_chisq):
+                    reduced_chisq < critical_chisq):
                     self.good_fit = True
                     #self.good_fit = False #to display chisqr for testing
                     # determine center properties by finding closest point
