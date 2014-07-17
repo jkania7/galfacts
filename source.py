@@ -70,6 +70,11 @@ class Source(object):
                                      sigma=sigma)
             self.fit_p = np.array(fit_p)
             self.covar = np.array(covar)
+
+            print "Fit parameters"
+            print fit_p
+            print "Covariance matrix"
+            print covar
             
             if (np.isinf(fit_p).any() or np.isinf(covar).any() or
                 np.isnan(fit_p).any() or np.isnan(covar).any()):
@@ -87,11 +92,18 @@ class Source(object):
                 crit_chisq_data = np.genfromtxt('critical_chisq.tab',names=True)
                 critical_chisq = crit_chisq_data["crit_095"][len(self.I_data)-1]
                 #
-                # print p
-                # print len(gauss_and_line(self.DEC,*fit_p))
-                # print len(self.I_data)
-                # print gauss_and_line(self.DEC,*fit_p)
-                # print self.I_data
+                print "I_data"
+                print self.I_data
+                print "Fit data"
+                print gauss_and_line(self.DEC,*fit_p)
+                print "Degrees of freedom"
+                print len(self.I_data)
+                print "Chi-sq"
+                print chisq
+                print "Reduced chi-sq"
+                print reduced_chisq
+                print "Critical chi-sq"
+                print critical_chisq
                 self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
                 if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
                     np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
