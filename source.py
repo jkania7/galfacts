@@ -85,12 +85,13 @@ class Source(object):
                                      for i in range(len(fit_p))])
                 residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
                 #chisq, p = chisquare(gauss_and_line(self.DEC,*fit_p), f_exp=self.I_data)
-                chisq = np.sum( (self.I_data - gauss_and_line(self.DEC,*fit_p))**2. / gauss_and_line(self.DEC,*fit_p) )
-                reduced_chisq = chisq / (len(self.I_data) - 1.)
+                dof = len(self.I_data) - len(fit_p) - 1 # degrees of freedom
+                chisq = np.sum( ( (self.I_data - gauss_and_line(self.DEC,*fit_p)) / options["sigma"] )**2. )
+                reduced_chisq = chisq / dof
                 #
                 # GET THE CRITICAL CHISQ
                 crit_chisq_data = np.genfromtxt('critical_chisq.tab',names=True)
-                critical_chisq = crit_chisq_data["crit_095"][len(self.I_data)-1]
+                critical_chisq = crit_chisq_data["crit_095"][dof-1]
                 #
                 print "I_data"
                 print self.I_data
