@@ -87,7 +87,7 @@ class Source(object):
             np.isnan(fit_p).any() or np.isnan(covar).any()):
             self.good_fit = False
             self.bad_reasons+="fit_is_nan_or_inf,"
-         else:
+        else:
             self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                  for i in range(len(fit_p))])
             residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
