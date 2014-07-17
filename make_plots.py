@@ -89,6 +89,10 @@ def field_plot(ra, dec, I_data, filename,labels=None,centers=None):
     corr_ra = ra*np.cos(np.deg2rad(dec))
     if labels == None:
         sc = ax1.scatter(corr_ra,dec,c=I_data)
+        print("\n")
+        print type(sc)
+        print sc
+        print("\n")
         cb = plt.colorbar(sc)
         cb.set_label('Stokes I (K)')
     else:

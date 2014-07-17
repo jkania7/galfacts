@@ -10,6 +10,7 @@ import sys
 import numpy as np
 import make_plots
 from scipy.optimize import curve_fit
+from scipy.stats import chisquare
 
 class Source(object):
     """Source object for GALFACTS transient search"""
@@ -69,6 +70,7 @@ class Source(object):
                                      sigma=sigma)
             self.fit_p = np.array(fit_p)
             self.covar = np.array(covar)
+            
             if (np.isinf(fit_p).any() or np.isinf(covar).any() or
                 np.isnan(fit_p).any() or np.isnan(covar).any()):
                 self.good_fit = False
@@ -77,9 +79,13 @@ class Source(object):
                 self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                      for i in range(len(fit_p))])
                 residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
+                chisq, p = chisquare(gauss_and_line(self.DEC,*fit_p), f_exp=self.I_data)
+                self.bad_reason+="chisqr is {0}".format(chisq) #for testing
                 if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
-                    np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"]):
+                    np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
+                    chisq<options["chisq"]):
                     self.good_fit = True
+                    #self.good_fit = False #to display chisqr for testing
                     # determine center properties by finding closest point
                     # to center
                     center_point = np.abs(self.DEC - self.fit_p[1]).argmin()

@@ -58,7 +58,7 @@ if __name__ == "__main__":
                                    -5.4833,-2.7417])
     semi_opt.add_argument('--num_channels',type=int,
                           help='number of channels in observation',
-                          default=2048)
+                          default=4096)
     semi_opt.add_argument('--bin_width',type=float,
                           help='width of analysis bins in MHz',
                           default=5.)
@@ -121,11 +121,14 @@ if __name__ == "__main__":
                           help='Source fit e_width/width requirement',
                           default=0.1)
     semi_opt.add_argument("--format", type=str,
-                          help="input files are in binary, default is ascii",
-                          default="ascii")
+                          help="input files are in binary or ascii, default is binary",
+                          default="binary")
     semi_opt.add_argument("--band", type=str,
                           help="band0 or band1, default is band0",
                           default="band0")
+    semi_opt.add_argument("--chisq", type=float,
+                          help="maximum chi squared value for the source fit",
+                          default=10.0)
 #    semi_opt.add_argument('--dec',type=float,nargs=2,
 #                          metavar=('LOWER','UPPER'),
 #                          help="analyze only this declination range, "+
