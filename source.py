@@ -84,8 +84,8 @@ class Source(object):
                 reduced_chisq = chisq / (len(self.I_data) - 1.)
                 #
                 # GET THE CRITICAL CHISQ
-                crit_chisq_data = np.genfromtxt('critical_chisq.tab',names=True,dtype=True)
-                critical_chisq = crit_chisq_data["crit_0.95"][len(self.I_data)-1]
+                crit_chisq_data = np.genfromtxt('critical_chisq.tab',names=True)
+                critical_chisq = crit_chisq_data["crit_095"][len(self.I_data)-1]
                 #
                 # print p
                 # print len(gauss_and_line(self.DEC,*fit_p))
