@@ -6,7 +6,7 @@ Find sources in GALFACTS transient search
                              bug in beam.py
 23 June 2014 - Joseph Kania - added binary option for file inputs                             
 """
-vers = "v1.0.2"
+vers = "v1.0.4"
 
 import sys
 import os
@@ -103,7 +103,7 @@ if __name__ == "__main__":
                           'each source peak',
                           default=8)
     semi_opt.add_argument('--point_sep',type=int,
-                          help='number of points to skip in fiiting '+
+                          help='number of points to skip in fitting '+
                           'source (skips sidelobes)',
                           default=25)
     semi_opt.add_argument('--num_outer_points',type=int,

@@ -44,7 +44,7 @@ class Source(object):
         self.center_I = None
         self.bad_reasons = ""
 
-    def fit(self, filename, **options):
+    def fit(self, filename,b, **options):
         """Fit the source I data vs. DEC with a Gaussian +
            linear baseline"""
         # middle of data
@@ -77,11 +77,6 @@ class Source(object):
             
         self.fit_p = np.array(fit_p)
         self.covar = np.array(covar)
-
-        print "Fit parameters"
-        print fit_p
-        print "Covariance matrix"
-        print covar
         
         if (np.isinf(fit_p).any() or np.isinf(covar).any() or
             np.isnan(fit_p).any() or np.isnan(covar).any()):
@@ -91,25 +86,14 @@ class Source(object):
             self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                  for i in range(len(fit_p))])
             residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
-            #chisq, p = chisquare(gauss_and_line(self.DEC,*fit_p), f_exp=self.I_data)
-            dof = len(self.I_data) - len(fit_p) - 1 # degrees of freedom
-            chisq = np.sum( ( (self.I_data - gauss_and_line(self.DEC,*fit_p)) / options["sigma"] )**2. )
-            reduced_chisq = chisq / dof
-            #
-            print "I_data"
-            print self.I_data
-            print "Fit data"
-            print gauss_and_line(self.DEC,*fit_p)
-            print "Degrees of freedom"
-            print len(self.I_data)
-            print "Chi-sq"
-            print chisq
-            print "Reduced chi-sq"
-            print reduced_chisq
-            self.bad_reasons+=" red chisq is {0} ".format(reduced_chisq) #for testing
+            rms = np.sqrt(np.sum(residuals**2.)/len(residuals))
+            fileparse = filename.split("/")
+            with open("../rms.txt","a") as rmsfile:
+                rmsfile.write("{0}  {1} {2} {3}\n".format(b, fileparse[2], max(gauss_and_line(self.DEC,*fit_p)), rms))
+            chisqr = np.sum((self.I_data - gauss_and_line(self.DEC, *fit_p))**2./guass_and_line(self.DEC, *fit_p))
+            
             if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
-                np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
-                reduced_chisq < 1.0):
+                np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"]):
                 self.good_fit = True
                 #self.good_fit = False #to display chisqr for testing
                 # determine center properties by finding closest point

@@ -462,7 +462,7 @@ class Beam(object):
             for s in range(len(sources)):
                 # fit and plot
                 plt_filename = bin_results_dir+"/source{0:03d}".format(s)
-                sources[s].fit(plt_filename, **self.options)
+                sources[s].fit(plt_filename, b, **self.options)#remove b 22 July by jwk
                 if (sources[s].time_end or sources[s].dec_end or
                     not sources[s].good_fit):
                     bad_sources.append(s)
