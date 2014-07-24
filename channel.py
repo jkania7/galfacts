@@ -109,12 +109,13 @@ class Channel(object):
             Q = list(Q)
             U = list(U)
             V = list(V)
-        
-            #if chan_num%100 == 0:
-            with  open("../results_ascii/chan{0}.txt".format(chan_num),"w") as txt:
-                for i in xrange(len(I)):
-                    txt.write("{0} {1} {2} {3} {4} {5} {6}\n".format(ra[i], dec[i], ast[i], I[i], Q[i], U[i], V[i]))
-            
+            """
+            if chan_num%100 == 0:
+                with  open("../results_ascii/chan{0}.txt".format(chan_num),"w") as txt:
+                    txt.write(";ra\tdec\tast\tI\tQ\tU\tV")
+                    for i in xrange(len(I)):
+                        txt.write("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\n".format(ra[i], dec[i], ast[i], I[i], Q[i], U[i], V[i]))
+            """
             return (ra, dec, ast, I, Q, U, V)
 
     def cfg_read(self, cfg_file):

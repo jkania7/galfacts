@@ -61,13 +61,9 @@ def single_stokes(x_data, xlabel, y_data, ylabel, filename):
     plt.close(fig)
 
 def source_plot(dec, I_data, all_dec, all_I_data, residuals,
-                fit_x, fit_y, filename, fit, reason):
+                fit_x, fit_y, filename, gb):
     """Generate a plot of I vs dec for a single source"""
-    if fit:
-        titl = " - good fit"
-    else:
-        titl = " - bad fit - "
-    titl =  (filename.split("/")[-1]).split(".")[0] + titl + reason
+    titl =  (filename.split("/")[-1]).split(".")[0] + gb
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
     ax1.plot(all_dec, all_I_data, 'ko')
     ax1.plot(dec, I_data, 'ro')
@@ -76,9 +72,12 @@ def source_plot(dec, I_data, all_dec, all_I_data, residuals,
     ax1.set_ylabel('Stokes I (K)')
     res_data = 100.*residuals/I_data
     ax2.plot(dec,res_data,'ro')
-    ax2.set_ylim(-1,1)
+    if (np.min(residuals) >  -1 or  np.max(residuals) < 1):
+        ax2.set_ylim(-1,1)
+    else:
+        ax2.set_ylim(np.min(residuals),np.max(residuals))
     ax2.set_ylabel('Residuals (K)')
-    ax2.set_xlabel('Dec (degs) with {0} points'.format(len(I_data)))
+    ax2.set_xlabel("Dec (degs)")
     fig.subplots_adjust(hspace=0.1)
     fig.suptitle(titl, fontsize=14)
     plt.savefig(filename)

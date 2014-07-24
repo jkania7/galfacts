@@ -462,7 +462,7 @@ class Beam(object):
             for s in range(len(sources)):
                 # fit and plot
                 plt_filename = bin_results_dir+"/source{0:03d}".format(s)
-                sources[s].fit(plt_filename, b, **self.options)#remove b 22 July by jwk
+                sources[s].fit(plt_filename,**self.options)
                 if (sources[s].time_end or sources[s].dec_end or
                     not sources[s].good_fit):
                     bad_sources.append(s)
@@ -474,15 +474,15 @@ class Beam(object):
             if self.options["file_verbose"]:
                 with open(bin_results_dir+"/good_sources.txt","w") as f:
                     f.write("# SourceNum\tcenterRA\tcenterDEC\tpeakI\twidthDEC\n")
-                    f.write("# ---------\tdeg\tdeg\tK\tdeg\n")
+                    f.write("# ---------\tdeg\t\tdeg\tK\tdeg\n")
                     for s in good_sources: #jwk added tab delimiters 
-                        f.write("{0:03d}\t{1:.3f}\t{2:.3f}\t{3:.3f}\t{4:.3f}\n".\
+                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t{3:.3f}\t{4:.3f}\n".\
                                 format(s,sources[s].center_RA,
                                        sources[s].center_DEC,
                                        sources[s].center_I,
                                        sources[s].fit_p[2]))
                 with open(bin_results_dir+"/bad_sources.txt","w") as f:
-                    f.write("#\tSourceNum\tcenterRA\tcenterDEC\tReasons\n")
+                    f.write("SourceNum\tcenterRA\tcenterDEC\tReasons\n")
                     for s in bad_sources:
                         if sources[s].dec_end:
                             sources[s].bad_reasons+="dec_change,"
