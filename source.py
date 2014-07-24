@@ -10,7 +10,6 @@ import sys
 import numpy as np
 import make_plots
 from scipy.optimize import curve_fit
-from scipy.stats import chisquare
 
 class Source(object):
     """Source object for GALFACTS transient search"""
@@ -86,11 +85,11 @@ class Source(object):
             self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                  for i in range(len(fit_p))])
             residuals = self.I_data - gauss_and_line(self.DEC,*fit_p)
-            rms = np.sqrt(np.sum(residuals**2.)/len(residuals))
-            fileparse = filename.split("/")
-            with open("../rms.txt","a") as rmsfile:
-                rmsfile.write("{0}  {1} {2} {3}\n".format(b, fileparse[2], max(gauss_and_line(self.DEC,*fit_p)), rms))
-            chisqr = np.sum((self.I_data - gauss_and_line(self.DEC, *fit_p))**2./guass_and_line(self.DEC, *fit_p))
+            #rms = np.sqrt(np.sum(residuals**2.)/len(residuals))
+            #fileparse = filename.split("/")
+            #with open("../rms.txt","a") as rmsfile:
+            #    rmsfile.write("{0}  {1} {2} {3}\n".format(b, fileparse[2], max(gauss_and_line(self.DEC,*fit_p)), rms))
+            #chisqr = np.sum((self.I_data - gauss_and_line(self.DEC, *fit_p))**2./gauss_and_line(self.DEC, *fit_p))
             
             if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
                 np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"]):
@@ -110,6 +109,17 @@ class Source(object):
                 self.bad_reasons+="bad_fit_uncert,"
             # for plotting
             if options["file_verbose"]:
+                if (not self.good_fit or self.dec_end or self.time_end):
+                    gb = " - bad fit - "
+                else:
+                    gb = " - good fit"
+                gb += self.bad_reasons
+                if self.dec_end :
+                    gb += " dec_end"
+                else if self.time_end:
+                    gb += " time end"
+                print("self.dec_end {0}". format(self.dec_end))
+                print("self.time_end {0}".format(self.time_end))
                 fit_x = np.linspace(self.DEC[0], self.DEC[-1], 100)
                 fit_y = gauss_and_line(fit_x, *fit_p)
                 make_plots.source_plot(self.DEC, self.I_data,

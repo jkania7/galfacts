@@ -77,8 +77,8 @@ def source_plot(dec, I_data, all_dec, all_I_data, residuals,
     res_data = 100.*residuals/I_data
     ax2.plot(dec,res_data,'ro')
     ax2.set_ylim(-1,1)
-    ax2.set_ylabel('Residuals (%)')
-    ax2.set_xlabel('Dec (degs)')
+    ax2.set_ylabel('Residuals (K)')
+    ax2.set_xlabel('Dec (degs) with {0} points'.format(len(I_data)))
     fig.subplots_adjust(hspace=0.1)
     fig.suptitle(titl, fontsize=14)
     plt.savefig(filename)

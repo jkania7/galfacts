@@ -97,10 +97,10 @@ if __name__ == "__main__":
                           default=8.)
     semi_opt.add_argument('--sigma',type=float,
                           help='theoretical noise level in Kelvin',
-                          default=0.017)
+                          default=0.030)
     semi_opt.add_argument('--num_source_points',type=int,
-                          help='number of points to fit around '+
-                          'each source peak',
+                          help='number of points to fit on each '+
+                          'side of the  source peak',
                           default=8)
     semi_opt.add_argument('--point_sep',type=int,
                           help='number of points to skip in fitting '+
