@@ -104,7 +104,6 @@ class Source(object):
                                     (self.fit_p[3] +
                                     self.fit_p[4]*self.DEC))
                 self.center_I = self.I_baselined[center_point]
-                print("center_I is {0}".format(self.center_I))
             else:
                 self.good_fit = False
                 self.bad_reasons+="bad_fit_uncert,"
@@ -136,7 +135,7 @@ def gauss_and_line(x, *p):
 """
 def gauss_and_poly(x, *p):
     amp, center, sigma, coeff0, coeff1, coeff2, coeff3 = p
-    return (coeff0 + coeff1*x + coeff2*x**2.0 + coeff3*x**3.0 +
+    return (coeff0 + coeff1*x + coeff2*x**2. + coeff3*x**3. +
             amp*np.exp(-(x-center)**2/(2.0*sigma**2)))
 
 if __name__ == "__main__":

@@ -72,10 +72,15 @@ def source_plot(dec, I_data, all_dec, all_I_data, residuals,
     ax1.set_ylabel('Stokes I (K)')
     res_data = 100.*residuals/I_data
     ax2.plot(dec,res_data,'ro')
-    if (np.min(residuals) >  -1 or  np.max(residuals) < 1):
-        ax2.set_ylim(-1,1)
+    if np.min(residuals) >  -1:
+        lower_lim = -1
     else:
-        ax2.set_ylim(np.min(residuals),np.max(residuals))
+        lower_lim = np.min(residuals)
+    if np.max(residuals) < 1:
+        upper_lim = 1
+    else:
+        upper_lim = np.max(residuals)
+    ax2.set_ylim(lower_lim,upper_lim)
     ax2.set_ylabel('Residuals (K)')
     ax2.set_xlabel("Dec (degs)")
     fig.subplots_adjust(hspace=0.1)

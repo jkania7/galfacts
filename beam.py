@@ -213,6 +213,7 @@ class Beam(object):
             # find and correct missing data
             # loop over all points
             i=0
+            nan_start_stop = dict() #a dictionary to hold the start and stops of the nans
             while i < len(I_data):
                 # if we find a nan, let's record it and figure out
                 # how many nans there are, then linearly interpolate
@@ -226,6 +227,7 @@ class Beam(object):
                         # good number, then linearly interpolate
                         # over nans
                         if not math.isnan(I_data[j]):
+                            nan_start_stop[i] = j #adds starts and stops to dictionary
                             # this takes in to consideration that
                             # the first nan could be the first data
                             # point. If so, just use a flat line
@@ -261,7 +263,9 @@ class Beam(object):
                         Q_data[i:] = Q_data[i-1]
                         U_data[i:] = U_data[i-1]
                         V_data[i:] = V_data[i-1]
+                        nan_start_stop[i] = len(I_data)-1 #-1 b/c index is one less than the length
                         break # all done!
+                
                 i += 1
                 
             if self.options["verbose"]:
@@ -439,12 +443,20 @@ class Beam(object):
                 # check dec scan to see if we change direction
                 # across source
                 dec_end = False
+                """
                 for k in range(len(this_DEC)-1):
                     if (np.sign(this_DEC[k+1]-this_DEC[k]) !=
                         np.sign(this_DEC[1]-this_DEC[0])):
                         dec_end = True
                         break
+                """
+                for k in this_DEC:
+                    for q in nan_start_stop.items():
+                        if (k >= q[0] and k <= q[1]):
+                            dec_end = true
+                            break
                 # now, add it
+                print np.max(this_I_data)
                 sources.append(source.Source(this_RA, this_DEC, this_AST,
                                              this_I_data, this_Q_data,
                                              this_U_data, this_V_data,
@@ -473,22 +485,23 @@ class Beam(object):
                 print("Log: Fit {0} bad sources.".format(len(bad_sources)))
             if self.options["file_verbose"]:
                 with open(bin_results_dir+"/good_sources.txt","w") as f:
-                    f.write("# SourceNum\tcenterRA\tcenterDEC\tpeakI\twidthDEC\n")
-                    f.write("# ---------\tdeg\t\tdeg\tK\tdeg\n")
-                    for s in good_sources: #jwk added tab delimiters 
-                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t{3:.3f}\t{4:.3f}\n".\
+                    f.write("# SourceNum\tcenterRA\tcenterDEC\tpeakI\t\twidthDEC\n")
+                    f.write("# ---------\tdeg\t\tdeg\t\tK\t\tdeg\n")
+                    for s in good_sources: #jwk -  added tab delimiters 
+                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\t{4:.3f}\n".\
                                 format(s,sources[s].center_RA,
                                        sources[s].center_DEC,
                                        sources[s].center_I,
                                        sources[s].fit_p[2]))
                 with open(bin_results_dir+"/bad_sources.txt","w") as f:
-                    f.write("SourceNum\tcenterRA\tcenterDEC\tReasons\n")
+                    f.write("SourceNum\tcenterRA\t\tcenterDEC\t\tReasons\n")
+                    f.write("#--------\tdeg\t\tdeg")
                     for s in bad_sources:
                         if sources[s].dec_end:
                             sources[s].bad_reasons+="dec_change,"
                         if sources[s].time_end:
                             sources[s].bad_reasons+="end_of_obs,"
-                        f.write("{0:03d}\t{1}\t{2}\t{3}\n".\
+                        f.write("{0:03d}\t\t{1}\t\t{2}\t\t{3}\n".\
                                 format(s,sources[s].center_RA,
                                        sources[s].center_DEC,
                                        sources[s].bad_reasons))
