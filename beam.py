@@ -450,7 +450,7 @@ class Beam(object):
                         dec_end = True
                         break
                 """
-                for k in this_DEC:
+                for k in xrange(len(this_DEC)-1):
                     for q in nan_start_stop.items():
                         if (k >= q[0] and k <= q[1]):
                             dec_end = true

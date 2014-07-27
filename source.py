@@ -67,6 +67,7 @@ class Source(object):
             fit_p, covar = curve_fit(gauss_and_poly,  self.DEC,
                                      self.I_data, p0=guess_p,
                                      sigma=sigma)
+            print("fit_p is {0}".format(fit_p))
         except RuntimeError:
             if options["verbose"]:
                 print("Log: A fit did not converge.")
