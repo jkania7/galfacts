@@ -110,12 +110,11 @@ class Source(object):
                 #self.good_fit = False #to display chisqr for testing
                 # determine center properties by finding closest point
                 # to center
-                center_point = np.abs(self.DEC - self.fit_p[1]).argmin()
+                amp, center, sigma, coeff0, coeff1, coeff2, coeff3 = self.fit_p
+                center_point = np.abs(self.DEC - center).argmin()
                 self.center_RA = self.RA[center_point]
                 self.center_DEC = self.DEC[center_point]
-                self.I_baselined = (self.I_data -
-                                    (self.fit_p[3] +
-                                    self.fit_p[4]*self.DEC))
+                self.I_baselined = self.I_data - poly(self.DEC, coeff0, coeff1, coeff2, coeff3)
                 self.center_I = self.I_baselined[center_point]
                 print("center_I is {0}".format(self.center_I))
             else:
@@ -151,6 +150,10 @@ def gauss_and_poly(x, *p):
     amp, center, sigma, coeff0, coeff1, coeff2, coeff3 = p
     return (coeff0 + coeff1*x + coeff2*x**2.0 + coeff3*x**3.0 +
             amp*np.exp(-(x-center)**2/(2.0*sigma**2)))
+
+def poly(x, *p):
+    coeff0, coeff1, coeff2, coeff3 = p
+    return (coeff0 + coeff1*x + coeff2*x**2.0 + coeff3*x**3.0)
 
 if __name__ == "__main__":
     sys.exit("Error: module not meant to be run from top level")
