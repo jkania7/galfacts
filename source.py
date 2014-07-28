@@ -95,6 +95,7 @@ class Source(object):
             dof = len(self.I_data) - len(fit_p) - 1 # degrees of freedom
             chisq = np.sum( ( (self.I_data - gauss_and_line(self.DEC,*fit_p)) / options["sigma"] )**2. )
             reduced_chisq = chisq / dof
+            red_chisq_mean = reduced_chisq / np.mean(self.I_data)**2.
             #
             print "I_data"
             print self.I_data
@@ -106,7 +107,9 @@ class Source(object):
             print chisq
             print "Reduced chi-sq"
             print reduced_chisq
-            self.bad_reasons+=" red chisq is {0} ".format(reduced_chisq) #for testing
+            print "Reduced chi-sq over mean-sq"
+            print red_chisq_mean
+            self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
             if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
                 np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"] and
                 reduced_chisq < 1.0):
