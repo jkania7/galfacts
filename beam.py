@@ -450,10 +450,10 @@ class Beam(object):
                         dec_end = True
                         break
                 """
-                for k in xrange(len(this_DEC)-1):
+                for k in xrange(base1_start, base2_end):
                     for q in nan_start_stop.items():
                         if (k >= q[0] and k <= q[1]):
-                            dec_end = true
+                            dec_end = True
                             break
                 # now, add it
                 print np.max(this_I_data)
@@ -495,7 +495,7 @@ class Beam(object):
                                        sources[s].fit_p[2]))
                 with open(bin_results_dir+"/bad_sources.txt","w") as f:
                     f.write("SourceNum\tcenterRA\t\tcenterDEC\t\tReasons\n")
-                    f.write("#--------\tdeg\t\tdeg")
+                    f.write("#--------\tdeg\t\t\tdeg\n")
                     for s in bad_sources:
                         if sources[s].dec_end:
                             sources[s].bad_reasons+="dec_change,"
