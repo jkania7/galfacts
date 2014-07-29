@@ -126,9 +126,9 @@ if __name__ == "__main__":
     semi_opt.add_argument("--band", type=str,
                           help="band0 or band1, default is band0",
                           default="band0")
-    semi_opt.add_argument("--chisq", type=float,
-                          help="maximum chi squared value for the source fit",
-                          default=10.0)
+#    semi_opt.add_argument("--chisq", type=float,
+#                          help="maximum chi squared value for the source fit",
+#                          default=10.0)
 #    semi_opt.add_argument('--dec',type=float,nargs=2,
 #                          metavar=('LOWER','UPPER'),
 #                          help="analyze only this declination range, "+

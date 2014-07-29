@@ -61,13 +61,12 @@ class Source(object):
         # fill the structure
         #guess_p = [amp_guess, center_guess, sigma_guess, y_int_guess,
         #           slope_guess]
-        guess_p = [amp_guess, center_guess, sigma_guess, constant_guess ,slope_guess, 0.5, 0.5]
+        guess_p = [amp_guess, center_guess, sigma_guess, constant_guess ,slope_guess, 1, 1]
         sigma = [options["sigma"]]*len(self.DEC)
         try:
             fit_p, covar = curve_fit(gauss_and_poly,  self.DEC,
                                      self.I_data, p0=guess_p,
                                      sigma=sigma)
-            print("fit_p is {0}".format(fit_p))
         except RuntimeError:
             if options["verbose"]:
                 print("Log: A fit did not converge.")
@@ -86,6 +85,7 @@ class Source(object):
             self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                  for i in range(len(fit_p))])
             residuals = self.I_data - gauss_and_poly(self.DEC,*fit_p)
+            """
             dof = len(self.I_data) - len(fit_p) - 1 # degrees of freedom
             chisq = np.sum( ( (self.I_data - gauss_and_poly(self.DEC,*fit_p)) / options["sigma"] )**2. )
             reduced_chisq = chisq / dof
@@ -104,6 +104,7 @@ class Source(object):
             print "Reduced chi-sq over mean-sq"
             print red_chisq_mean
             self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
+            """
             if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
                 np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"]):
                 self.good_fit = True
@@ -116,7 +117,6 @@ class Source(object):
                 self.center_DEC = self.DEC[center_point]
                 self.I_baselined = self.I_data - poly(self.DEC, coeff0, coeff1, coeff2, coeff3)
                 self.center_I = self.I_baselined[center_point]
-                print("center_I is {0}".format(self.center_I))
             else:
                 self.good_fit = False
                 self.bad_reasons+="bad_fit_uncert,"

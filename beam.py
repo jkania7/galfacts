@@ -352,9 +352,24 @@ class Beam(object):
                                   "/source_chan_avg.png")
             if self.options["verbose"]:
                 print("Log: Locating sources.")
-            source_points = np.where(I_data_source >
+            #a good place to but in the test to see if we are close to dec change?
+            source_points_all = np.where(I_data_source >
                                      self.options["source_mask"]*
                                      self.options["sigma"])[0]
+            source_points = []
+            distance = int(math.ceil(self.options["num_source_points"]/2 + self.options["point_sep"] + self.options["num_outer_points"]))
+            for k in source_points_all:
+                no_nans = True
+                for j in xrange(-distance, distance):
+                    try:
+                        if math.isnan(I_data[k+j]):
+                            no_nans = False
+                    except IndexError:
+                        non_nans = False #if the source is too close to edge it will try to index out of bounds,
+                                         #this sould be excluded 
+                if no_nans:
+                    source_points.append(k)
+            
             # storage for sources
             sources = []
             # i is the starting point for this source
@@ -443,7 +458,7 @@ class Beam(object):
                 # check dec scan to see if we change direction
                 # across source
                 dec_end = False
-                """
+                
                 for k in range(len(this_DEC)-1):
                     if (np.sign(this_DEC[k+1]-this_DEC[k]) !=
                         np.sign(this_DEC[1]-this_DEC[0])):
@@ -454,7 +469,9 @@ class Beam(object):
                     for q in nan_start_stop.items():
                         if (k >= q[0] and k <= q[1]):
                             dec_end = True
+                            print k
                             break
+                """
                 # now, add it
                 print np.max(this_I_data)
                 sources.append(source.Source(this_RA, this_DEC, this_AST,
@@ -488,14 +505,14 @@ class Beam(object):
                     f.write("# SourceNum\tcenterRA\tcenterDEC\tpeakI\t\twidthDEC\n")
                     f.write("# ---------\tdeg\t\tdeg\t\tK\t\tdeg\n")
                     for s in good_sources: #jwk -  added tab delimiters 
-                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\t{4:.3f}\n".\
+                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\t\t{4:.3f}\n".\
                                 format(s,sources[s].center_RA,
                                        sources[s].center_DEC,
                                        sources[s].center_I,
                                        sources[s].fit_p[2]))
                 with open(bin_results_dir+"/bad_sources.txt","w") as f:
                     f.write("SourceNum\tcenterRA\t\tcenterDEC\t\tReasons\n")
-                    f.write("#--------\tdeg\t\t\tdeg\n")
+                    f.write("#--------\tdeg\t\t\tdeg\t\t\t-------\n")
                     for s in bad_sources:
                         if sources[s].dec_end:
                             sources[s].bad_reasons+="dec_change,"

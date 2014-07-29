@@ -5,9 +5,9 @@
 
 rm -r ../results_test
 
-python2.7 find_sources.py --field S1041+027 --band band0 --date 55183 --beam 0  --verbose --file_verbose --exclude_channels  2748 2749 2750 2751 2752 2753 2754  --data_filepath /n/fox/processed/S1_CALS --num_source_points 17 --point_sep 0 --results_filepath ../results_test --rfi_mask 15
+python2.7 find_sources.py --field S1041+027 --band band0 --date 55183 --beam 0  --verbose --file_verbose --exclude_channels  2749 2750 2751 2752  --data_filepath /n/fox/processed/S1_CALS --num_source_points 12 --point_sep 1 --num_outer_points 10 --results_filepath ../results_test --rfi_mask 15 --format ascii
 
-echo -n "Would you like to transfer the results to AO? [y/n]"
+echo -n "Would you like to transfer the results to AO? [y/n]: "
 read ans
 
 case $ans in

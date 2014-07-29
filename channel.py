@@ -20,11 +20,11 @@ class Channel(object):
         self.chan_num = chan_num
         if self.options["format"] == "ascii":
            #Added band0/run1/ to fit calgary's file structure
-           #self.chan_file = "{0}/{1}/{2}/beam{3}/fluxtime{4:04d}.dat".\
-           self.chan_file = "{0}/{1}/{2}/run1/{3}/beam{4}/fluxtime{5:04d}.dat".\
+           #self.chan_file = "{0}/{1}/{2}/run1/{3}/beam{4}/fluxtime{5:04d}.dat".\
+           self.chan_file = "{0}/{1}/{2}/{3}/beam{4}/fluxtime{5:04d}.dat".\
              format(options["data_filepath"],
-                    options["field"],
                     options["band"],
+                    options["field"],
                     options["date"],
                     beam_num,
                     chan_num)

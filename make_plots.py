@@ -76,13 +76,13 @@ def source_plot(dec, I_data, all_dec, all_I_data, residuals,
         lower_lim = -1
     else:
         lower_lim = np.min(residuals)
-    if np.max(residuals) < 1:
-        upper_lim = 1
+    if np.max(residuals) < 5:
+        upper_lim = 5
     else:
         upper_lim = np.max(residuals)
     ax2.set_ylim(lower_lim,upper_lim)
     ax2.set_ylabel('Residuals (K)')
-    ax2.set_xlabel("Dec (degs)")
+    ax2.set_xlabel("Dec (degs) covering {0} deg of dec with {1} points".format(np.max(all_dec)-np.min(all_dec),len(I_data)))
     fig.subplots_adjust(hspace=0.1)
     fig.suptitle(titl, fontsize=14)
     plt.savefig(filename)
