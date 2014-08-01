@@ -55,8 +55,8 @@ def main(**options):
                     print("Log: found {0} good sources.".\
                           format(num_good))
         if options["verbose"]:
-            print("Log: found {0} total good sources in this bin."\
-                  .format(len(sources)))
+            print("Log: found {0} total good sources in bin{1}."\
+                  .format(len(sources),this_bin))
         if len(sources) == 0:
             continue
         RA = np.float64(np.array([s.center_RA for s in sources]))
@@ -82,8 +82,8 @@ def main(**options):
                                            n_samples=len(X))
             if options["verbose"]:
                 print("Log: found bandwidth {0}".format(bandwidth))
-            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
-            #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True)
+            #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
+            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True)
             ms.fit(X)
             labels = ms.labels_
             centers = ms.cluster_centers_
@@ -123,7 +123,11 @@ def main(**options):
                     my_Q_data = np.append(my_Q_data,src.Q_data)
                     my_U_data = np.append(my_U_data,src.U_data)
                     my_V_data = np.append(my_V_data,src.V_data)
-                if not len(my_RA)==0:    
+                print("\nlen(my_DEC)after append = {0}".format(len(my_DEC)))
+                print("len(scr.DEC) = {0}".format(len(src.DEC)))
+                print("scr.DEC = {0}".format(src.DEC))
+                print("my_DEC = {0}".format(my_DEC))
+                if True: #not len(my_RA)==0:    
                     if options["file_verbose"]:
                         plt.field_plot(my_RA, my_DEC, my_I_data,
                                        my_out_dir+"/cluster{0:03d}.png".\
@@ -178,7 +182,7 @@ if __name__ == "__main__":
                           default=0.1)
     semi_opt.add_argument('--sigma',type=float,
                           help='theoretical noise level in Kelvin',
-                          default=0.017)
+                          default=0.030)
     semi_opt.add_argument('--beam_width',type=float,
                           help='Telescope beamwidth in degrees, guess for cluster fit',
                           default=0.058)

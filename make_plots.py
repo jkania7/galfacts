@@ -61,13 +61,14 @@ def single_stokes(x_data, xlabel, y_data, ylabel, filename):
     plt.close(fig)
 
 def source_plot(dec, I_data, all_dec, all_I_data, residuals,
-                fit_x, fit_y, filename, gb):
+                fit_x, fit_y, filename, gb, ploy_base_fit):
     """Generate a plot of I vs dec for a single source"""
     titl =  (filename.split("/")[-1]).split(".")[0] + gb
     fig, (ax1, ax2) = plt.subplots(2, sharex=True)
     ax1.plot(all_dec, all_I_data, 'ko')
     ax1.plot(dec, I_data, 'ro')
     ax1.plot(fit_x,fit_y,'k-')
+    ax1.plot(dec, ploy_base_fit,"g^")
     ax1.set_xlim(np.min(dec),np.max(dec))
     ax1.set_ylabel('Stokes I (K)')
     res_data = 100.*residuals/I_data
@@ -76,13 +77,15 @@ def source_plot(dec, I_data, all_dec, all_I_data, residuals,
         lower_lim = -1
     else:
         lower_lim = np.min(residuals)
-    if np.max(residuals) < 5:
-        upper_lim = 5
+    
+    if np.max(residuals) < 1:
+        upper_lim = 1
     else:
         upper_lim = np.max(residuals)
+    
     ax2.set_ylim(lower_lim,upper_lim)
     ax2.set_ylabel('Residuals (K)')
-    ax2.set_xlabel("Dec (degs) covering {0} deg of dec with {1} points".format(np.max(all_dec)-np.min(all_dec),len(I_data)))
+    ax2.set_xlabel("Dec (degs)")
     fig.subplots_adjust(hspace=0.1)
     fig.suptitle(titl, fontsize=14)
     plt.savefig(filename)

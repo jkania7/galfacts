@@ -61,7 +61,7 @@ class Source(object):
         # fill the structure
         #guess_p = [amp_guess, center_guess, sigma_guess, y_int_guess,
         #           slope_guess]
-        guess_p = [amp_guess, center_guess, sigma_guess, constant_guess ,slope_guess, 1, 1]
+        guess_p = [amp_guess, center_guess, sigma_guess, constant_guess, slope_guess, 1, 1]
         sigma = [options["sigma"]]*len(self.DEC)
         try:
             fit_p, covar = curve_fit(gauss_and_poly,  self.DEC,
@@ -105,17 +105,18 @@ class Source(object):
             print red_chisq_mean
             self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
             """
+            amp, center, sigma, coeff0, coeff1, coeff2, coeff3 = self.fit_p
+            poly_base_fit = poly(self.DEC, coeff0, coeff1, coeff2, coeff3)
             if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
                 np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"]):
                 self.good_fit = True
                 #self.good_fit = False #to display chisqr for testing
                 # determine center properties by finding closest point
                 # to center
-                amp, center, sigma, coeff0, coeff1, coeff2, coeff3 = self.fit_p
                 center_point = np.abs(self.DEC - center).argmin()
                 self.center_RA = self.RA[center_point]
                 self.center_DEC = self.DEC[center_point]
-                self.I_baselined = self.I_data - poly(self.DEC, coeff0, coeff1, coeff2, coeff3)
+                self.I_baselined = self.I_data - poly_base_fit
                 self.center_I = self.I_baselined[center_point]
             else:
                 self.good_fit = False
@@ -135,8 +136,8 @@ class Source(object):
                 fit_y = gauss_and_poly(fit_x, *fit_p)
                 make_plots.source_plot(self.DEC, self.I_data,
                                        self.all_DEC,self.all_I_data,
-                                       residuals,
-                                       fit_x, fit_y, filename, gb)
+                                       residuals,fit_x, fit_y,
+                                       filename, gb, poly_base_fit)
             
 """
 def gauss_and_line(x, *p):
