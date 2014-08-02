@@ -39,15 +39,15 @@ class Channel(object):
         else:
             self.cfg_file = "{0}/{1}/{2}/{3}/beam{4}/fluxtime.dat_cfg".\
                        format(options["data_filepath"],
-                              options["band"],
                               options["field"],
+                              options["band"],
                               options["date"],
                               beam_num)
             
             self.chan_file = "{0}/{1}/{2}/{3}/beam{4}/fluxtime.dat".\
                              format(options["data_filepath"],
-                                    options["band"],
                                     options["field"],
+                                    options["band"],
                                     options["date"],
                                     beam_num)
             try:

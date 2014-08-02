@@ -55,7 +55,7 @@ def main(**options):
                     print("Log: found {0} good sources.".\
                           format(num_good))
         if options["verbose"]:
-            print("Log: found {0} total good sources in bin{1}."\
+            print("Log: found {0} total good sources in {1}."\
                   .format(len(sources),this_bin))
         if len(sources) == 0:
             continue
@@ -82,8 +82,8 @@ def main(**options):
                                            n_samples=len(X))
             if options["verbose"]:
                 print("Log: found bandwidth {0}".format(bandwidth))
-            #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
-            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True)
+            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
+            #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True)
             ms.fit(X)
             labels = ms.labels_
             centers = ms.cluster_centers_
@@ -127,11 +127,14 @@ def main(**options):
                 print("len(scr.DEC) = {0}".format(len(src.DEC)))
                 print("scr.DEC = {0}".format(src.DEC))
                 print("my_DEC = {0}".format(my_DEC))
-                if True: #not len(my_RA)==0:    
+                if not len(my_RA)==0:    
                     if options["file_verbose"]:
                         plt.field_plot(my_RA, my_DEC, my_I_data,
                                        my_out_dir+"/cluster{0:03d}.png".\
                                            format(clust))
+                    else:
+                        print("outside if")
+                        stuff = rawinput("Press enter")
                     clusters.append(cluster.Cluster(my_RA, my_DEC, my_AST,
                                                     my_I_data, my_Q_data,
                                                     my_U_data, my_V_data))

@@ -444,12 +444,18 @@ class Beam(object):
                 # this_V_data = V_data[sstart:send]
                 # check dec scan to see if we change direction
                 # across source
+                #Checks to see if source is in predetermined dec/ra box
                 dec_end = False
                 for k in range(len(this_DEC)-1):
-                    if (np.sign(this_DEC[k+1]-this_DEC[k]) !=
-                        np.sign(this_DEC[1]-this_DEC[0])):
+                    if ((np.sign(this_DEC[k+1]-this_DEC[k]) != np.sign(this_DEC[1]-this_DEC[0]))
+                    or this_DEC[k] > self.options["max_DEC"] or this_DEC[k] < self.options["min_DEC"]):
                         dec_end = True
                         break
+                for j in range(len(this_RA)-1):
+                    if (this_RA[j] > self.options["max_RA"] or this_RA[j] < self.options["min_RA"]):
+                        ra_end = True
+                        break
+                
                 # now, add it
                 sources.append(source.Source(this_RA, this_DEC, this_AST,
                                              this_I_data, this_Q_data,
