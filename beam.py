@@ -446,12 +446,13 @@ class Beam(object):
                 # across source
                 #Checks to see if source is in predetermined dec/ra box
                 dec_end = False
+                ra_end = False
                 for k in range(len(this_DEC)-1):
                     if ((np.sign(this_DEC[k+1]-this_DEC[k]) != np.sign(this_DEC[1]-this_DEC[0]))
                     or this_DEC[k] > self.options["max_DEC"] or this_DEC[k] < self.options["min_DEC"]):
                         dec_end = True
                         break
-                for j in range(len(this_RA)-1):
+                for j in range(len(this_RA)):
                     if (this_RA[j] > self.options["max_RA"] or this_RA[j] < self.options["min_RA"]):
                         ra_end = True
                         break
@@ -463,7 +464,7 @@ class Beam(object):
                                              all_RA, all_DEC, all_AST,
                                              all_I_data, all_Q_data,
                                              all_U_data, all_V_data,
-                                             time_end, dec_end))
+                                             time_end, dec_end, ra_end))
                 # start next search from where this one left off
                 i = j
             if self.options["verbose"]:
@@ -476,7 +477,7 @@ class Beam(object):
                 plt_filename = bin_results_dir+"/source{0:03d}".format(s)
                 sources[s].fit(plt_filename,**self.options)
                 if (sources[s].time_end or sources[s].dec_end or
-                    not sources[s].good_fit):
+                    not sources[s].good_fit or sources[s].ra_end):
                     bad_sources.append(s)
                 else:
                     good_sources.append(s)
@@ -499,6 +500,8 @@ class Beam(object):
                     for s in bad_sources:
                         if sources[s].dec_end:
                             sources[s].bad_reasons+="dec_change,"
+                        if sources[s].ra_end:
+                            sources[s].bad_reasons+="ra_change"
                         if sources[s].time_end:
                             sources[s].bad_reasons+="end_of_obs,"
                         f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3}\n".\

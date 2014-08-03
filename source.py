@@ -16,7 +16,7 @@ class Source(object):
     def __init__(self, RA, DEC, AST, I_data, Q_data, U_data, V_data,
                  all_RA, all_DEC, all_AST, all_I_data,all_Q_data,
                  all_U_data,all_V_data,
-                 time_end, dec_end):
+                 time_end, dec_end, ra_end):
         """Initialize the source object"""
         self.RA = RA
         self.DEC = DEC
@@ -34,6 +34,7 @@ class Source(object):
         self.all_V_data = all_V_data
         self.time_end = time_end
         self.dec_end = dec_end
+        self.dec_end = ra_end
         self.fit_p = None
         self.e_fit_p = None
         self.good_fit = None
@@ -123,13 +124,15 @@ class Source(object):
                 self.bad_reasons+="bad_fit_uncert,"
             # for plotting
             if options["file_verbose"]:
-                if (not self.good_fit or self.dec_end or self.time_end):
+                if (not self.good_fit or self.dec_end or self.time_end or self.dec_end):
                     gb = " - bad fit - "
                 else:
                     gb = " - good fit"
                 gb += self.bad_reasons
                 if self.dec_end :
                     gb += " dec_end"
+                elif self.ra_end:
+                    gb += " ra_end"
                 elif self.time_end:
                     gb += " time end"
                 fit_x = np.linspace(self.DEC[0], self.DEC[-1], 100)
