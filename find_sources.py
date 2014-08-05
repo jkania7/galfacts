@@ -40,16 +40,14 @@ if __name__ == "__main__":
     required.add_argument('--date',type=int,
                           help="date to analyze",
                           required=True)
-    """
     required.add_argument("--min_DEC", type = float,
                           help = "start of DEC range for the field")
-    required.add_argument("--max_DEC" =, type = float,
+    required.add_argument("--max_DEC", type = float,
                           help = "end of DEC range for field")
     required.add_argument("--min_RA", type = float,
                           help="min RA of the field")
     required.add_argument("--max_RA", type = float,
                           help="max RA of the Field")
-    """
     semi_opt=parser.add_argument_group('arguments set to defaults:')
     semi_opt.add_argument('--data_filepath',type=str,
                           help='path where data are saved',

@@ -447,14 +447,29 @@ class Beam(object):
                 #Checks to see if source is in predetermined dec/ra box
                 dec_end = False
                 ra_end = False
+                print(len(this_DEC))
+                print(len(this_RA))
+                print("I am outside the loops")
                 for k in range(len(this_DEC)-1):
-                    if ((np.sign(this_DEC[k+1]-this_DEC[k]) != np.sign(this_DEC[1]-this_DEC[0]))
-                    or this_DEC[k] > self.options["max_DEC"] or this_DEC[k] < self.options["min_DEC"]):
+                    print("I am in the dec loop {0} times".format(k))
+                    if (np.sign(this_DEC[k+1]-this_DEC[k]) != np.sign(this_DEC[1]-this_DEC[0])):
+                        print("Failed Treys condition")
+                        dec_end = True
+                        break
+                    elif (this_DEC[k] > self.options["max_DEC"]):
+                        print("Failed max condition this_DEC={0} self.options[max_DEC]={1}".format(this_DEC[k], self.options["max_DEC"]))
+                        dec_end = True
+                        break
+                    elif (this_DEC[k] < self.options["min_DEC"]):
+                        print("I am in the if statement of the dec loop")
+                        print("Failed min condition this_DEC={0} self.options[min_DEC]={1}".format(this_DEC[k], self.options["min_DEC"]))
                         dec_end = True
                         break
                 for j in range(len(this_RA)):
+                    print("I am in the RA loop {0} times".format(j))
                     if (this_RA[j] > self.options["max_RA"] or this_RA[j] < self.options["min_RA"]):
                         ra_end = True
+                        print("I am in the ra if statment")
                         break
                 
                 # now, add it
