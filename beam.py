@@ -427,51 +427,24 @@ class Beam(object):
                 all_Q_data = Q_data[base1_start:base2_end]
                 all_U_data = U_data[base1_start:base2_end]
                 all_V_data = V_data[base1_start:base2_end]
-                # sstart = max_point-25
-                # send = max_point+25
-                # if sstart < 0:
-                #     time_end = True
-                #     sstart = 0
-                # if send > len(AST):
-                #     time_end = True
-                #     send = len(AST)
-                # this_RA = RA[sstart:send]
-                # this_DEC = DEC[sstart:send]
-                # this_AST = AST[sstart:send]
-                # this_I_data = I_data[sstart:send]
-                # this_Q_data = Q_data[sstart:send]
-                # this_U_data = U_data[sstart:send]
-                # this_V_data = V_data[sstart:send]
-                # check dec scan to see if we change direction
-                # across source
-                #Checks to see if source is in predetermined dec/ra box
+                #
+                # Check if we change directions during this source
                 dec_end = False
                 ra_end = False
-                print(len(this_DEC))
-                print(len(this_RA))
-                print("I am outside the loops")
-                for k in range(len(this_DEC)-1):
-                    print("I am in the dec loop {0} times".format(k))
-                    if (np.sign(this_DEC[k+1]-this_DEC[k]) != np.sign(this_DEC[1]-this_DEC[0])):
-                        print("Failed Treys condition")
-                        dec_end = True
-                        break
-                    elif (this_DEC[k] > self.options["max_DEC"]):
-                        print("Failed max condition this_DEC={0} self.options[max_DEC]={1}".format(this_DEC[k], self.options["max_DEC"]))
-                        dec_end = True
-                        break
-                    elif (this_DEC[k] < self.options["min_DEC"]):
-                        print("I am in the if statement of the dec loop")
-                        print("Failed min condition this_DEC={0} self.options[min_DEC]={1}".format(this_DEC[k], self.options["min_DEC"]))
-                        dec_end = True
-                        break
-                for j in range(len(this_RA)):
-                    print("I am in the RA loop {0} times".format(j))
-                    if (this_RA[j] > self.options["max_RA"] or this_RA[j] < self.options["min_RA"]):
-                        ra_end = True
-                        print("I am in the ra if statment")
-                        break
-                
+                # Estimated distance between each dec point
+                dec_size = (np.max(all_DEC)-np.min(all_DEC))/(np.argmax(all_DEC)-np.argmin(all_DEC))
+                # Estimated distance between each ra point
+                ra_size = (np.max(all_RA)-np.min(all_RA))/(np.argmax(all_RA)-np.argmin(all_RA))
+                # we don't want to be within this many points of a change
+                point_req = self.options["num_source_points"]+self.options["point_sep"]+self.options["num_outer_points"]
+                # we don't want to be within this many degrees of a change
+                dec_req = dec_size * point_req
+                ra_req = ra_size * point_req
+                if (all_DEC < (self.options["min_DEC"]+dec_rec)).any() or (all_DEC > (self.options["max_DEC"]-dec_req)).any():
+                    dec_end = True
+                if (all_RA < (self.options["min_RA"]+ra_rec)).any() or (all_RA > (self.options["max_RA"]-ra_req)).any():
+                    ra_end = True
+                #
                 # now, add it
                 sources.append(source.Source(this_RA, this_DEC, this_AST,
                                              this_I_data, this_Q_data,

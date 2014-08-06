@@ -4,7 +4,9 @@ Find sources in GALFACTS transient search
 03 June 2014 - Trey Wenger - creation
 12 June 2014 - Trey Wenger - fixed smoothing convolution normalization
                              bug in beam.py
-23 June 2014 - Joseph Kania - added binary option for file inputs                             
+23 June 2014 - Joseph Kania - added binary option for file inputs
+05 August 2014 - Trey Wenger - made min_dec, max_dec, min_ra, max_ra
+                               options semi-optional                            
 """
 vers = "v1.0.4"
 
@@ -40,14 +42,6 @@ if __name__ == "__main__":
     required.add_argument('--date',type=int,
                           help="date to analyze",
                           required=True)
-    required.add_argument("--min_DEC", type = float,
-                          help = "start of DEC range for the field")
-    required.add_argument("--max_DEC", type = float,
-                          help = "end of DEC range for field")
-    required.add_argument("--min_RA", type = float,
-                          help="min RA of the field")
-    required.add_argument("--max_RA", type = float,
-                          help="max RA of the Field")
     semi_opt=parser.add_argument_group('arguments set to defaults:')
     semi_opt.add_argument('--data_filepath',type=str,
                           help='path where data are saved',
@@ -64,6 +58,14 @@ if __name__ == "__main__":
                                    "BEAM4","BEAM5","BEAM6"),
                           default=[0.,2.7417,5.4833,2.7417,-2.7417,
                                    -5.4833,-2.7417])
+    semi_opt.add_argument("--min_DEC", type = float,default=-90.,
+                          help = "start of DEC range for the field")
+    semi_opt.add_argument("--max_DEC", type = float,default=90.,
+                          help = "end of DEC range for field")
+    semi_opt.add_argument("--min_RA", type = float,default=0.,
+                          help="min RA of the field")
+    semi_opt.add_argument("--max_RA", type = float, default=360.,
+                          help="max RA of the Field")
     semi_opt.add_argument('--num_channels',type=int,
                           help='number of channels in observation',
                           default=4096)
