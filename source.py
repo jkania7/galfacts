@@ -5,6 +5,7 @@ Source object for GALFACTS transiet search
 11 June 2014 - Joseph Kania - Modification
 10 July 2014 - Trey Wenger - plots both all data and data used for
                              fit
+05 August 2014 - Trey Wenger - Fixed ra_end typo
 """
 import sys
 import numpy as np
@@ -34,7 +35,7 @@ class Source(object):
         self.all_V_data = all_V_data
         self.time_end = time_end
         self.dec_end = dec_end
-        self.dec_end = ra_end
+        self.ra_end = ra_end
         self.fit_p = None
         self.e_fit_p = None
         self.good_fit = None
