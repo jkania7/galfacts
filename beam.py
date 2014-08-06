@@ -440,9 +440,9 @@ class Beam(object):
                 # we don't want to be within this many degrees of a change
                 dec_req = dec_size * point_req
                 ra_req = ra_size * point_req
-                if (all_DEC < (self.options["min_DEC"]+dec_rec)).any() or (all_DEC > (self.options["max_DEC"]-dec_req)).any():
+                if (all_DEC < (self.options["min_DEC"]+dec_req)).any() or (all_DEC > (self.options["max_DEC"]-dec_req)).any():
                     dec_end = True
-                if (all_RA < (self.options["min_RA"]+ra_rec)).any() or (all_RA > (self.options["max_RA"]-ra_req)).any():
+                if (all_RA < (self.options["min_RA"]+ra_req)).any() or (all_RA > (self.options["max_RA"]-ra_req)).any():
                     ra_end = True
                 #
                 # now, add it
