@@ -35,7 +35,7 @@ class Beam(object):
              for c in options["exclude_channels"]:
                 self.channels[c].error = True
                 self.elim_channels.append( (c, 'excluded') )
-                       
+        print("type(self.options) = {0}".format(type(self.options)))
     def find_sources(self):
         """Algorithm to detect sources for this beam"""
         # generate results directory

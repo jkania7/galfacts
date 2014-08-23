@@ -115,6 +115,7 @@ def main(**options):
                 my_Q_data = np.array([])
                 my_U_data = np.array([])
                 my_V_data = np.array([])
+                #print("len(my_RA) before append {0}".format(len(my_RA)))
                 for src in my_sources:
                     my_RA = np.append(my_RA,src.RA)
                     my_DEC = np.append(my_DEC,src.DEC)
@@ -123,21 +124,23 @@ def main(**options):
                     my_Q_data = np.append(my_Q_data,src.Q_data)
                     my_U_data = np.append(my_U_data,src.U_data)
                     my_V_data = np.append(my_V_data,src.V_data)
-                print("\nlen(my_DEC)after append = {0}".format(len(my_DEC)))
-                print("len(scr.DEC) = {0}".format(len(src.DEC)))
-                print("scr.DEC = {0}".format(src.DEC))
-                print("my_DEC = {0}".format(my_DEC))
-                if not len(my_RA)==0:    
+                print("\nlen(my_I_data) after append = {0}".format(len(my_I_data)))
+                print("len(src.I_baselined) = {0}".format(len(src.I_baselined)))
+                try:
                     if options["file_verbose"]:
                         plt.field_plot(my_RA, my_DEC, my_I_data,
-                                       my_out_dir+"/cluster{0:03d}.png".\
+                                   my_out_dir+"/cluster{0:03d}.png".\
                                            format(clust))
-                    else:
-                        print("outside if")
-                        stuff = rawinput("Press enter")
-                    clusters.append(cluster.Cluster(my_RA, my_DEC, my_AST,
-                                                    my_I_data, my_Q_data,
-                                                    my_U_data, my_V_data))
+                except TypeError as e:
+                    print("error is \"{0}\"".format(e))
+                    print("my_RA = {0}".format(my_RA))
+                    print("src.RA = {0}".format(src.RA))
+                 #   else:
+                  #      print("outside if")
+                   #     stuff = rawinput("Press enter")
+                clusters.append(cluster.Cluster(my_RA, my_DEC, my_AST,
+                                                my_I_data, my_Q_data,
+                                                my_U_data, my_V_data))
             good_clusters = []
             bad_clusters = []
             for clust in range(len(clusters)):
