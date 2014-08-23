@@ -70,6 +70,11 @@ def main(**options):
         if options["file_verbose"]:
             plt.field_plot(RA, DEC, I_data,
                            my_out_dir+"/all_sources.png")
+            with open("{0}/{1}/parameters.txt".format(\
+                    options["cluster_filepath"], options["field"]),"w") as f:
+                for j in options:
+                    f.write("{0} = {1}\n".format(j, options[j]))
+                             
         if options["verbose"]:
             print("Log: clustering members.")
         n_clusters = 0

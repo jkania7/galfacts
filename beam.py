@@ -35,7 +35,6 @@ class Beam(object):
              for c in options["exclude_channels"]:
                 self.channels[c].error = True
                 self.elim_channels.append( (c, 'excluded') )
-        print("type(self.options) = {0}".format(type(self.options)))
     def find_sources(self):
         """Algorithm to detect sources for this beam"""
         # generate results directory
@@ -129,9 +128,19 @@ class Beam(object):
 
         # write eliminated channel list to a file
         if self.options["file_verbose"]:
-            with open(results_dir+"/channels_eliminated.txt","w") as f:
-                for num,reason in self.elim_channels:
-                    f.write("{0} {1}\n".format(num,reason))
+            elim = {} #sorts, channel is only listed once
+            for num,reason in self.elim_channels:
+                elim[num] =  str(reason)
+                
+            with open(results_dir+"/parameters.txt","w") as f:
+                for j in sorted(elim):
+                    f.write("\n{0} ".format(j))
+                    for k in elim[j]:
+                       f.write ("{0}".format(k))
+                f.write("\nParameters used to run the program\n")
+                for j in self.options:
+                    f.write("{0} = {1}\n".format(j, self.options[j]))
+                
 
         # recompute Stokes averaged over time
         if self.options["verbose"]:
