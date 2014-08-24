@@ -1,4 +1,4 @@
-s """
+"""
 beam.py
 Beam object for GALFACTS transient search
 02 June 2014 - Trey Wenger - creation
