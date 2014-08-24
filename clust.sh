@@ -11,12 +11,12 @@ if [ "$USER" = "jkania" ]; then
 	--beams 0 --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
 	--source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster
 
-    echo -n "Would you like to transfer the files [y/n]: "
+    echo -n "Would you like to transfer the files to CMU[y/n]: "
     read ans
 
     if [ "$ans" = "y" ]; then 
 	echo "trasferring the files"
-	rsync -avzr --delete -e ssh /n/fox/jkania/results* jkania@remote.naic.edu:/share/reu2014/jkania
+	rsync -avzr --delete -e ssh /n/fox/jkania/results_cluster jkania@linux.andrew.cmu.edu:/afs/andrew.cmu.edu/usr12/jkania/results
     fi
 elif [ "$USER" = "tghosh" ]; then
     #rm -r /n/fox/jkania/results_cluster

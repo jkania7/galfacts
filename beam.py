@@ -133,12 +133,11 @@ class Beam(object):
                 if num not in elim:
                     elim[num] =  str(reason)
                 else:
-                    elim[num].append(" " + str(reason))
+                    elim[num] = elim[num] +  " " + str(reason)
             with open(results_dir+"/parameters.txt","w") as f:
                 for j in sorted(elim):
                     f.write("\n{0} ".format(j))
-                    for k in elim[j]:
-                       f.write ("{0}".format(k))
+                    f.write ("{0}".format(elim[j]))
                 f.write("\nParameters used to run the program\n")
                 for j in self.options:
                     f.write("{0} = {1}\n".format(j, self.options[j]))
