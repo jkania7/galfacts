@@ -114,6 +114,8 @@ def main(**options):
                 my_sources = [sources[i] for i in
                               range(len(my_members)) if my_members[i]]
                 # gather up data for sources in this cluster
+                if options["verbose"]:
+                    print("Log: This cluster has {0} good sources".format(len(my_sources)))
                 my_RA = np.array([])
                 my_DEC = np.array([])
                 my_AST = np.array([])
