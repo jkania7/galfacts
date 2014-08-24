@@ -1,4 +1,4 @@
-"""
+s """
 beam.py
 Beam object for GALFACTS transient search
 02 June 2014 - Trey Wenger - creation
@@ -130,8 +130,10 @@ class Beam(object):
         if self.options["file_verbose"]:
             elim = {} #sorts, channel is only listed once
             for num,reason in self.elim_channels:
-                elim[num] =  str(reason)
-                
+                if num not in elim:
+                    elim[num] =  str(reason)
+                else:
+                    elim[num].append(" " + str(reason))
             with open(results_dir+"/parameters.txt","w") as f:
                 for j in sorted(elim):
                     f.write("\n{0} ".format(j))
