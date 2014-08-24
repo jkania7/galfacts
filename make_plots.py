@@ -47,7 +47,7 @@ def stokes_plot(x_data, xlabel, I_data, Q_data, U_data, V_data,
                      ax.get_xticklabels() + ax.get_yticklabels()):
             item.set_fontsize(12)
     plt.savefig(filename)
-    plt.close(fig)
+    plt.close()
 
 def single_stokes(x_data, xlabel, y_data, ylabel, filename):
     """Generate plot of single stokes parameter"""
@@ -58,7 +58,7 @@ def single_stokes(x_data, xlabel, y_data, ylabel, filename):
     ax1.set_xlabel(xlabel)
     ax1.set_ylabel(ylabel)
     plt.savefig(filename)
-    plt.close(fig)
+    plt.close()
 
 def source_plot(dec, I_data, all_dec, all_I_data, residuals,
                 fit_x, fit_y, filename, gb, ploy_base_fit):
@@ -89,7 +89,7 @@ def source_plot(dec, I_data, all_dec, all_I_data, residuals,
     fig.subplots_adjust(hspace=0.1)
     fig.suptitle(titl, fontsize=14)
     plt.savefig(filename)
-    plt.close(fig)
+    plt.close()
 
 def field_plot(ra, dec, I_data, filename,labels=None,centers=None):
     fig, ax1 = plt.subplots(1)
@@ -110,7 +110,7 @@ def field_plot(ra, dec, I_data, filename,labels=None,centers=None):
             ax1.set_xlabel('RA * cos(Dec) (deg)')
             ax1.set_ylabel('Dec (deg)')
             plt.savefig(filename)
-            plt.close(fig)
+            plt.close()
 
 def field_plot_3d(ra, dec, I_data, fit_x, fit_y, fit_z, filename):
     fig, ax1 = plt.subplots(1,subplot_kw={"projection": '3d'})
@@ -123,7 +123,7 @@ def field_plot_3d(ra, dec, I_data, fit_x, fit_y, fit_z, filename):
     ax1.set_zlabel('Stokes I (K)')
     plt.tight_layout()
     plt.savefig(filename)
-    plt.close(fig)
+    plt.close()
 
 if __name__ == "__main__":
     sys.exit("Error: module not meant to be run at top level.")
