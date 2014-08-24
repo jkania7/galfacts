@@ -27,6 +27,7 @@ def main(**options):
              options["beams"][0])
     bins = [o for o in os.listdir(my_dir)
             if os.path.isdir(os.path.join(my_dir,o))]
+    print "Found bins {}".format(bins)
     for this_bin in bins:
         # First, gather up the center positions for each source point
         if options["verbose"]:
@@ -108,7 +109,7 @@ def main(**options):
                 my_members = labels == clust
                 my_sources = [sources[i] for i in
                               range(len(my_members)) if my_members[i]]
-                # gather up date for sources in this cluster
+                # gather up data for sources in this cluster
                 my_RA = np.array([])
                 my_DEC = np.array([])
                 my_AST = np.array([])
