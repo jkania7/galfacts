@@ -112,6 +112,10 @@ def main(**options):
                 # gather up data for sources in this cluster
                 if options["verbose"]:
                     print("Log: This cluster has {0} good sources".format(len(my_sources)))
+                if len(my_sources) < 3:
+                    if options["verbose"]:
+                        print("Log: skipping this cluster...")
+                    continue
                 my_RA = np.array([])
                 my_DEC = np.array([])
                 my_AST = np.array([])
