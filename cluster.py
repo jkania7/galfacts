@@ -13,7 +13,7 @@ class Cluster(object):
     def __init__(self, RA, DEC, AST, I_data, Q_data, U_data, V_data):
         """Initialize the source object"""
         print("In cluster.py, len(I_data) = {0}".format(len(I_data)))
-        #print("I_data = {0}".format(I_data))
+        print("I_data = {0}".format(I_data))
         self.RA = RA
         self.DEC = DEC
         self.AST = AST
