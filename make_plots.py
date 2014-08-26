@@ -106,11 +106,11 @@ def field_plot(ra, dec, I_data, filename,labels=None,centers=None):
             plt.plot(corr_ra[my_members],dec[my_members],col+'o')
             plt.plot(center[0],center[1],'o',markerfacecolor=col,
                      markeredgecolor='k', markersize=14, alpha=0.5)
-            plt.gca().invert_xaxis() # RA increase to left
-            ax1.set_xlabel('RA * cos(Dec) (deg)')
-            ax1.set_ylabel('Dec (deg)')
-            plt.savefig(filename)
-            plt.close()
+    plt.gca().invert_xaxis() # RA increase to left
+    ax1.set_xlabel('RA * cos(Dec) (deg)')
+    ax1.set_ylabel('Dec (deg)')
+    plt.savefig(filename)
+    plt.close()
 
 def field_plot_3d(ra, dec, I_data, fit_x, fit_y, fit_z, filename):
     fig, ax1 = plt.subplots(1,subplot_kw={"projection": '3d'})
