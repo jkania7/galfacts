@@ -101,7 +101,7 @@ if __name__ == "__main__":
                           default=10)
     semi_opt.add_argument('--rfi_mask',type=float,
                           help='sigma for RFI cut',
-                          default=6.)
+                          default=15.)
     semi_opt.add_argument('--source_mask',type=float,
                           help='sigma (SNR) for source cut',
                           default=8.)

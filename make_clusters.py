@@ -144,12 +144,8 @@ def main(**options):
                                    my_out_dir+"/cluster{0:03d}.png".\
                                            format(clust))
                 except TypeError as e:
-                    print("error is \"{0}\"".format(e))
-                    print("my_RA = {0}".format(my_RA))
-                    print("src.RA = {0}".format(src.RA))
-                 #   else:
-                  #      print("outside if")
-                   #     stuff = rawinput("Press enter")
+                    print("\nerror is \"{0}\"\n".format(e))
+                
                 clusters.append(cluster.Cluster(my_RA, my_DEC, my_AST,
                                                 my_I_data, my_Q_data,
                                                 my_U_data, my_V_data))
