@@ -111,11 +111,11 @@ if __name__ == "__main__":
     semi_opt.add_argument('--num_source_points',type=int,
                           help='number of points to fit on each '+
                           'side of the  source peak',
-                          default=8)
+                          default=12)
     semi_opt.add_argument('--point_sep',type=int,
                           help='number of points to skip in fitting '+
                           'source (skips sidelobes)',
-                          default=25)
+                          default=1)
     semi_opt.add_argument('--num_outer_points',type=int,
                           help='number of points to fit to get '+
                           'baseline level',

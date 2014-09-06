@@ -159,7 +159,10 @@ def main(**options):
             if options["verbose"]:
                 print("Log: Fit {0} good clusters.".format(len(good_clusters)))
                 print("Log: Found {0} bad clusters.".format(len(bad_clusters)))
-        
+            
+            
+            if options["file_verbose"]:
+                with 
     if options["verbose"]:
         print("Log: Done!")
 
