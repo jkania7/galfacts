@@ -89,7 +89,7 @@ def main(**options):
             if options["verbose"]:
                 print("Log: found bandwidth {0}".format(bandwidth))
             #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
-            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True)
+            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3)
             ms.fit(X)
             labels = ms.labels_
             centers = ms.cluster_centers_
@@ -159,7 +159,18 @@ def main(**options):
             if options["verbose"]:
                 print("Log: Fit {0} good clusters.".format(len(good_clusters)))
                 print("Log: Found {0} bad clusters.".format(len(bad_clusters)))
-        
+            
+            if options["file_verbose"]:
+                with open(my_out_dir+"/good_clusters.txt","w") as f:
+                    f.write("ClusterNum\tcenterRA\tcenterDEC\tpeakI\n")                               
+                    f.write("#---------\tdeg\t\tdeg\t\tK\n")
+                    for c in good_clusters:
+                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\t\t{4:.3f}\n".\
+                                format(c,sources[c].center_RA,
+                                       sources[c].center_DEC,
+                                       sources[c].center_I,
+                                       sources[c].fit_p[2])
+    
     if options["verbose"]:
         print("Log: Done!")
 
