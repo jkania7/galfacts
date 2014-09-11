@@ -4,6 +4,7 @@ Take output from find_sources.py and determine source positions
 that are related using mean shift algorithm. Fit the data from
 the related sources with a 2D Gaussian + baseplane.
 06 June 2014 - Trey Wenger - Creation
+11 Sept 2014 - Joseph Kania - added txt output files
 """
 vers = "v1.0"
 
@@ -165,11 +166,21 @@ def main(**options):
                     f.write("ClusterNum\tcenterRA\tcenterDEC\tpeakI\n")                               
                     f.write("#---------\tdeg\t\tdeg\t\tK\n")
                     for c in good_clusters:
-                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\t\t{4:.3f}\n".\
-                                format(c,sources[c].center_RA,
-                                       sources[c].center_DEC,
-                                       sources[c].center_I,
-                                       sources[c].fit_p[2])
+                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t\n".\
+                                    format(c,sources[c].center_RA,
+                                           sources[c].center_DEC,
+                                           sources[c].center_I)
+                                
+                with open(my_out_dir+"/bad_clusters.txt","w") as f:     
+                                f.write("ClusterNum\tcenterRA\tcenterDEC\tpeakI\treason\n")                               
+                                f.write("#---------\tdeg\t\tdeg\t\tK\t-----\n")
+                                for c in good_clusters:
+                                    f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\t\t{4}\n".\
+                                                format(c,sources[c].center_RA,
+                                                       sources[c].center_DEC,
+                                                       sources[c].center_I,
+                                                       sources[c].bad_reasons)
+
     
     if options["verbose"]:
         print("Log: Done!")

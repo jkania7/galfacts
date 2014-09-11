@@ -2,6 +2,7 @@
 source.py
 Source object for GALFACTS transiet search
 04 June 2014 - Trey Wenger - creation
+11 Sept 2014 Joseph Kania - added bad fit reasons
 """
 import sys
 import numpy as np
@@ -22,6 +23,7 @@ class Cluster(object):
         self.fit_p = None
         self.e_fit_p = None
         self.good_fit = None
+        self.bad_reasons =""
 
     def fit(self, filename, **options):
         """Fit cluster I vs RA*cos(Dec) and Dec"""
@@ -48,6 +50,7 @@ class Cluster(object):
                 np.isnan(fit_p).any() or np.isnan(covar).any() or
                 (fit_p<0).any()):
                 self.good_fit = False
+                self.bad_reason+="fit_is_nan_or_inf,"
             else:
                 self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                      for i in range(len(fit_p))])
@@ -57,6 +60,7 @@ class Cluster(object):
                     self.good_fit = True
                 else:
                     self.good_fit = False
+                    self.bad_reasons+="bad_fit_exceded_error"
                 # for plotting
                 if options["file_verbose"]:
                     fit_x = np.linspace(np.min(self.RA),
@@ -74,6 +78,8 @@ class Cluster(object):
             if options["verbose"]:
                 print("Log: A fit did not converge.")
             self.good_fit = False
+            self.bad_fit += "no_convergence,"
+            
             
 
 def gauss2d((x, y), *p):
