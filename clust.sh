@@ -16,7 +16,7 @@ if [ "$USER" = "jkania" ]; then
 
     if [ "$ans" = "y" ]; then 
 	echo "trasferring the files"
-	rsync -avzr --delete -e ssh /n/fox/jkania/results_cluster jkania@linux.andrew.cmu.edu:/afs/andrew.cmu.edu/usr12/jkania/results
+	rsync -avzr --delete -e ssh /n/fox/jkania/results_cluster/ jkania@linux.andrew.cmu.edu:/afs/andrew.cmu.edu/org/galfacts/results/
     fi
 elif [ "$USER" = "tghosh" ]; then
     #rm -r /n/fox/jkania/results_cluster

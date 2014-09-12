@@ -50,7 +50,7 @@ class Cluster(object):
                 np.isnan(fit_p).any() or np.isnan(covar).any() or
                 (fit_p<0).any()):
                 self.good_fit = False
-                self.bad_reason+="fit_is_nan_or_inf,"
+                self.bad_reasons+="fit_is_nan_or_inf,"
             else:
                 self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                      for i in range(len(fit_p))])
@@ -78,7 +78,7 @@ class Cluster(object):
             if options["verbose"]:
                 print("Log: A fit did not converge.")
             self.good_fit = False
-            self.bad_fit += "no_convergence,"
+            self.bad_reasons+= "no_convergence,"
             
             
 
