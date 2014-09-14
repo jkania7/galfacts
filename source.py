@@ -87,32 +87,12 @@ class Source(object):
             self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                  for i in range(len(fit_p))])
             residuals = self.I_data - gauss_and_poly(self.DEC,*fit_p)
-            """
-            dof = len(self.I_data) - len(fit_p) - 1 # degrees of freedom
-            chisq = np.sum( ( (self.I_data - gauss_and_poly(self.DEC,*fit_p)) / options["sigma"] )**2. )
-            reduced_chisq = chisq / dof
-            red_chisq_mean = reduced_chisq / np.mean(self.I_data)**2.
-            #
-            print "I_data"
-            print self.I_data
-            print "Fit data"
-            print gauss_and_poly(self.DEC,*fit_p)
-            print "Degrees of freedom"
-            print len(self.I_data)
-            print "Chi-sq"
-            print chisq
-            print "Reduced chi-sq"
-            print reduced_chisq
-            print "Reduced chi-sq over mean-sq"
-            print red_chisq_mean
-            self.bad_reasons+=" red_chisq is {0} ".format(reduced_chisq) #for testing
-            """
+
             amp, center, sigma, coeff0, coeff1, coeff2, coeff3 = self.fit_p
             poly_base_fit = poly(self.DEC, coeff0, coeff1, coeff2, coeff3)
             if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and
                 np.abs(self.e_fit_p[2]/self.fit_p[2])<options["width_req"]):
                 self.good_fit = True
-                #self.good_fit = False #to display chisqr for testing
                 # determine center properties by finding closest point
                 # to center
                 center_point = np.abs(self.DEC - center).argmin()
