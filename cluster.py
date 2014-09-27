@@ -38,6 +38,9 @@ class Cluster(object):
         guess_p = [amp_guess, center_x_guess, center_y_guess,
                    sigma_x_guess, sigma_y_guess, theta_guess]
         sigma = [options["sigma"]]*len(self.I_data)
+        self.center_RA = self.RA[self.I_data.argmax()] #centers for the bad fits
+        self.center_DEC = self.DEC[self.I_data.argmax()]
+        self.center_I = None
         try:
             fit_p, covar = curve_fit(gauss2d,
                                      (self.RA*np.cos(np.deg2rad(self.DEC)),
@@ -49,26 +52,11 @@ class Cluster(object):
             if (np.isinf(fit_p).any() or np.isinf(covar).any() or
                 np.isnan(fit_p).any() or np.isnan(covar).any() or
                 (fit_p<0).any()):
-                self.center_RA = self.RA[self.I_data.argmax()] #centers for the bad fits
-                self.center_DEC = self.DEC[self.I_data.argmax()]
+
                 self.good_fit = False
                 self.bad_reasons+="fit_is_nan_or_inf,"
-                
             else:
-                [amp, center_x, center_y, sigma_x, sigma_y, theta] = self.fit_p
-                #find the location of the point which has the smallest distance from 
-                #the fitted center value
-                x_center_location = np.abs(self.DEC - center_x).argmin()
-                y_center_location = np.abs(self.RA - center_y).argmin()
-                #get the value at that point
-                self.center_DEC = self.DEC[x_center_location]
-                self.center_RA = self.RA[y_center_location]
-                print type(self.I_data)  
-                print self.I_data 
-                print np.ndim(self.I_data)
-                print "\n"
-                
-                self.center_I = 2
+                [self.center_I, self.center_RA, self.center_DEC, sigma_x, sigma_y, theta] = self.fit_p
                 self.e_fit_p = np.array([np.sqrt(covar[i,i])
                                      for i in range(len(fit_p))])
                 if (np.abs(self.e_fit_p[0]/self.fit_p[0])<options["amp_req"] and

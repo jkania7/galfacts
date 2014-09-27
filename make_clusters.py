@@ -172,13 +172,13 @@ def main(**options):
                                            clusters[c].center_I))
                 
                 with open(my_out_dir+"/bad_clusters.txt","w") as f:     
-                                f.write("ClusterNum\tcenterRA\tcenterDEC\tpeakI\t\treason\n")                               
+                                f.write("ClusterNum\tcenterRA\tcenterDEC\t\treason\n")                        
                                 f.write("#---------\tdeg\t\tdeg\t\tK\t\t------\n")
                                 for c in bad_clusters:
-                                    f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\t\t{4}\n".\
+                                    #print(cluster[c].bad_reasons)
+                                    f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3}\n".\
                                                 format(c,clusters[c].center_RA,
                                                        clusters[c].center_DEC,
-                                                       clusters[c].center_I,
                                                        clusters[c].bad_reasons))
     
     if options["verbose"]:
