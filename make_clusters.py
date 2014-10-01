@@ -175,7 +175,6 @@ def main(**options):
                                 f.write("ClusterNum\tcenterRA\tcenterDEC\treason\n")                        
                                 f.write("#---------\tdeg\t\tdeg\t\t------\n")
                                 for c in bad_clusters:
-                                    #print(cluster[c].bad_reasons)
                                     f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3}\n".\
                                                 format(c,clusters[c].center_RA,
                                                        clusters[c].center_DEC,
