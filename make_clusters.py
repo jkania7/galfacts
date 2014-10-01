@@ -172,8 +172,8 @@ def main(**options):
                                            clusters[c].center_I))
                 
                 with open(my_out_dir+"/bad_clusters.txt","w") as f:     
-                                f.write("ClusterNum\tcenterRA\tcenterDEC\t\treason\n")                        
-                                f.write("#---------\tdeg\t\tdeg\t\tK\t\t------\n")
+                                f.write("ClusterNum\tcenterRA\tcenterDEC\treason\n")                        
+                                f.write("#---------\tdeg\t\tdeg\t\t------\n")
                                 for c in bad_clusters:
                                     #print(cluster[c].bad_reasons)
                                     f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3}\n".\
