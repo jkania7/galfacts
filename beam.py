@@ -223,7 +223,6 @@ class Beam(object):
             # find and correct missing data
             # loop over all points
             i=0
-            nan_start_stop = dict() #a dictionary to hold the start and stops of the nans
             while i < len(I_data):
                 # if we find a nan, let's record it and figure out
                 # how many nans there are, then linearly interpolate
@@ -237,7 +236,6 @@ class Beam(object):
                         # good number, then linearly interpolate
                         # over nans
                         if not math.isnan(I_data[j]):
-                            nan_start_stop[i] = j #adds starts and stops to dictionary
                             # this takes in to consideration that
                             # the first nan could be the first data
                             # point. If so, just use a flat line
@@ -273,7 +271,6 @@ class Beam(object):
                         Q_data[i:] = Q_data[i-1]
                         U_data[i:] = U_data[i-1]
                         V_data[i:] = V_data[i-1]
-                        nan_start_stop[i] = len(I_data)-1 #-1 b/c index is one less than the length
                         break # all done!
                 
                 i += 1

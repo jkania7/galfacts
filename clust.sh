@@ -6,17 +6,19 @@
 
 if [ "$USER" = "jkania" ]; then 
     rm -r /n/fox/jkania/results_cluster
-    
-    python2.7 make_clusters.py --field S1041+027 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
-	--beams 0 --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
-	--source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster
 
+    for i in 0 1 2 3 4 5 6
+    do
+	python2.7 make_clusters.py --field S1041+027 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/"$i"
+    done
     echo -n "Would you like to transfer the files to CMU[y/n]: "
     read ans
 
     if [ "$ans" = "y" ]; then 
 	echo "trasferring the files"
-	rsync -avzr --delete -e ssh /n/fox/jkania/results_cluster jkania@linux.andrew.cmu.edu:/afs/andrew.cmu.edu/usr12/jkania/results
+	rsync -avzr --delete -e ssh /n/fox/jkania/results_cluster/ jkania@linux.andrew.cmu.edu:/afs/andrew.cmu.edu/org/galfacts/results/
     fi
 elif [ "$USER" = "tghosh" ]; then
     #rm -r /n/fox/jkania/results_cluster

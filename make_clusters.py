@@ -166,21 +166,20 @@ def main(**options):
                     f.write("ClusterNum\tcenterRA\tcenterDEC\tpeakI\n")                               
                     f.write("#---------\tdeg\t\tdeg\t\tK\n")
                     for c in good_clusters:
-                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t\n".\
-                                    format(c,sources[c].center_RA,
-                                           sources[c].center_DEC,
-                                           sources[c].center_I)
-                                
+                        f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\n".\
+                                    format(c,clusters[c].center_RA,
+                                           clusters[c].center_DEC,
+                                           clusters[c].center_I))
+                
                 with open(my_out_dir+"/bad_clusters.txt","w") as f:     
-                                f.write("ClusterNum\tcenterRA\tcenterDEC\tpeakI\treason\n")                               
-                                f.write("#---------\tdeg\t\tdeg\t\tK\t-----\n")
-                                for c in good_clusters:
-                                    f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3:.3f}\t\t{4}\n".\
-                                                format(c,sources[c].center_RA,
-                                                       sources[c].center_DEC,
-                                                       sources[c].center_I,
-                                                       sources[c].bad_reasons)
-
+                                f.write("ClusterNum\tcenterRA\tcenterDEC\treason\n")                        
+                                f.write("#---------\tdeg\t\tdeg\t\t------\n")
+                                for c in bad_clusters:
+                                    #print(cluster[c].bad_reasons)
+                                    f.write("{0:03d}\t\t{1:.3f}\t\t{2:.3f}\t\t{3}\n".\
+                                                format(c,clusters[c].center_RA,
+                                                       clusters[c].center_DEC,
+                                                       clusters[c].bad_reasons))
     
     if options["verbose"]:
         print("Log: Done!")
