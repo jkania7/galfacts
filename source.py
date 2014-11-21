@@ -84,8 +84,11 @@ class Source(object):
             self.good_fit = False
             self.bad_reasons+="fit_is_nan_or_inf,"
         else:
-            self.e_fit_p = np.array([np.sqrt(covar[i,i])
-                                 for i in range(len(fit_p))])
+            try:
+                self.e_fit_p = np.array([np.sqrt(covar[i,i])
+                                         for i in range(len(fit_p))])
+            except RuntimeWarning:
+                print("covar = ".format(cover))
             residuals = self.I_data - gauss_and_poly(self.DEC,*fit_p)
 
             amp, center, sigma, coeff0, coeff1, coeff2, coeff3 = self.fit_p

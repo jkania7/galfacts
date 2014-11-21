@@ -89,8 +89,8 @@ def main(**options):
                                            n_samples=len(X))
             if options["verbose"]:
                 print("Log: found bandwidth {0}".format(bandwidth))
-            #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
-            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3)
+            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
+            #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3)
             ms.fit(X)
             labels = ms.labels_
             centers = ms.cluster_centers_
@@ -136,13 +136,13 @@ def main(**options):
                     my_Q_data = np.append(my_Q_data,src.Q_data)
                     my_U_data = np.append(my_U_data,src.U_data)
                     my_V_data = np.append(my_V_data,src.V_data)
-                try:
+                #try:
                     if options["file_verbose"]:
                         plt.field_plot(my_RA, my_DEC, my_I_data,
-                                   my_out_dir+"/cluster{0:03d}.png".\
+                                       my_out_dir+"/cluster{0:03d}.png".\
                                            format(clust))
-                except TypeError as e:
-                    print("Log: \"{0}\"".format(e))
+                #except TypeError as e:
+                #    print("Log: \"{0}\"".format(e))
                 
                 clusters.append(cluster.Cluster(my_RA, my_DEC, my_AST,
                                                 my_I_data, my_Q_data,

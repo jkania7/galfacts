@@ -299,7 +299,17 @@ class Beam(object):
             angle = np.arange(2*self.options["smooth_con_width"]+1)
             angle = angle*10.*np.pi/(2.*self.options["smooth_con_width"])
             angle = angle - 5.*np.pi
+            print("len(angle)= {0}".format(len(angle)))
+            print("type(angle)= {0}".format(type(angle)))
+            print(angle)
+            #for i in range(len(angle)):
+                #if angle[i] !=0:
             con = np.sin(angle)/angle
+                #else:
+            #        con[i] = 0
+            
+            print("len(con)= {0}".format(len(con)))
+            print("type(con)= {0}".format(type(con)))
             con[self.options["smooth_con_width"]] = 1.
             I_data = np.convolve(I_data,con,mode="same")/np.sum(con)
             Q_data = np.convolve(Q_data,con,mode="same")/np.sum(con)

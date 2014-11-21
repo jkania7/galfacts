@@ -1,25 +1,57 @@
 #!/bin/sh
 
-#Created by jwk to run make_clusters.py on 15 July 2014, improved 26 July 2014, make user specific 16 Aug 2014
+#Created by jwk to run make_clusters.py on 15 July 2014, improved 26 July 2014, make user specific 16 Aug 2014,22 Oct all calibrators 
 # Modified by tvw to add his stuff too
 
 
 if [ "$USER" = "jkania" ]; then 
-    rm -r /n/fox/jkania/results_cluster
 
     for i in 0 1 2 3 4 5 6
     do
-	python2.7 make_clusters.py --field S1041+027 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	python make_clusters.py --field S0957+161 --dates 55183 55184 55188 55189 55191 55192 55193 5519 4\
 	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
-	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/"$i"
-    done
-    echo -n "Would you like to transfer the files to CMU[y/n]: "
-    read ans
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
+	    > /n/fox/jkania/results_cluster/clusterout/S0957+161_beam"$i"_out.dat &
 
-    if [ "$ans" = "y" ]; then 
-	echo "trasferring the files"
-	rsync -avzr --delete -e ssh /n/fox/jkania/results_cluster/ jkania@linux.andrew.cmu.edu:/afs/andrew.cmu.edu/org/galfacts/results/
-    fi
+	python make_clusters.py --field S1009+140 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
+	    > /n/fox/jkania/results_cluster/clusterout/S1009+140_beam"$i"_out.dat &
+
+	python make_clusters.py --field S1026+064 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
+	    > /n/fox/jkania/results_cluster/clusterout/S1026+064_beam"$i"_out.dat &
+
+	python make_clusters.py --field S1041+027 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
+	    > /n/fox/jkania/results_cluster/clusterout/S1047+027_beam"$i"_out.dat &
+
+	python make_clusters.py --field S1054+032 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
+	    > /n/fox/jkania/results_cluster/clusterout/S1047+027_beam"$i"_out.dat &
+
+	python make_clusters.py --field S1106-008 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
+	    > /n/fox/jkania/results_cluster/clusterout/S1106-008_beam"$i"_out.dat &
+
+	python make_clusters.py --field S1123+055  --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
+	    > /n/fox/jkania/results_cluster/clusterout/S1123+055_beam"$i"_out.dat &
+
+	python make_clusters.py --field S1135-003 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
+	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
+	    > /n/fox/jkania/results_cluster/clusterout/S1135-003_beam"$i"_out.dat &
+      
+    wait #so not to use up all of fox's resorces 
+    done
+
+
 elif [ "$USER" = "tghosh" ]; then
     #rm -r /n/fox/jkania/results_cluster
 
