@@ -5,6 +5,7 @@ that are related using mean shift algorithm. Fit the data from
 the related sources with a 2D Gaussian + baseplane.
 06 June 2014 - Trey Wenger - Creation
 11 Sept 2014 - Joseph Kania - added txt output files
+23 Nov  2014 - Trey Wenger - added np.savez output
 """
 vers = "v1.0"
 
@@ -179,6 +180,7 @@ def main(**options):
                                                 format(c,clusters[c].center_RA,
                                                        clusters[c].center_DEC,
                                                        clusters[c].bad_reasons))
+            np.savez(my_out_dir+"/clusters",clusters=clusters)
     
     if options["verbose"]:
         print("Log: Done!")

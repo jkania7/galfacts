@@ -302,12 +302,8 @@ class Beam(object):
             print("len(angle)= {0}".format(len(angle)))
             print("type(angle)= {0}".format(type(angle)))
             print(angle)
-            #for i in range(len(angle)):
-                #if angle[i] !=0:
-            con = np.sin(angle)/angle
-                #else:
-            #        con[i] = 0
-            
+            con = np.array([np.sin(a)/a if a != 0. else 0.
+                            for a in angle])
             print("len(con)= {0}".format(len(con)))
             print("type(con)= {0}".format(type(con)))
             con[self.options["smooth_con_width"]] = 1.
