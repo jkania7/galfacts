@@ -66,6 +66,7 @@ def main(**options):
                 if options["verbose"]:
                     print("Could not find cluster file for {0}, beam {1}, bin {2}.".\
                           format(options["field"],beam,bn))
+                    print(cluster_file)
                 continue
             data = np.load(cluster_file)
             clusters = data['clusters']
