@@ -124,8 +124,8 @@ def main(**options):
                 "{0}, beam {1}, bin{2}".format(options['field'],
                                               beam,bn))
                 continue
-            elif sep > 0.001:
-                print("Error: best cluster is more than 0.001 degrees "
+            elif sep  > 2.:
+                print("Error: best cluster is more than 2 degrees "
                 "from NVSS center in {0}, beam {1}, bin {2}".\
                 format(options['field'],beam,bn))
                 print(clust.center_RA,clust.center_DEC)

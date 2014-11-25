@@ -1,5 +1,5 @@
-Source  RA        Dec        Start_RA  End_RA  Start_Dec End_Dec  S      P_s  PA
-#       hhmmss.ss ddmmss.s   deg       deg     deg       deg      mJy    mJy  deg
+Source  RA          Dec        Start_RA  End_RA  Start_Dec End_Dec  S      P_s  PA
+#       hhmmss.ss   ddmmss.s   deg       deg     deg       deg      mJy    mJy  deg
 # S1
 S0957+161 095728.32 +160653.7  146.25   150.5   15.867   16.367    628.2  51.62  14.6 
 S1009+140 100955.50 +140154.1  151.0    154.25  13.783   14.283    994.6  14.56 -82.6
