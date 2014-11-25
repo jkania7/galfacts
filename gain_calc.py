@@ -21,7 +21,7 @@ def calc_sep(ra1,dec1,ra2,dec2,degs=False):
     Give degs=True if units are in degrees and returns in deg
     """
     if degs:
-        ra1,ra2,dec1,dec2=np.deg2rad([ra1,ra2,dec1,dec2])
+        ra1,ra2,dec1,dec2 = np.deg2rad([ra1,ra2,dec1,dec2])
         
     sep = np.cos(np.pi/2.-dec1)*np.cos(np.pi/2.-dec2)
     sep += np.sin(np.pi/2.-dec1)*np.sin(np.pi/2.-dec2)*np.cos(ra1-ra2)
