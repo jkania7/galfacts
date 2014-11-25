@@ -14,6 +14,42 @@ import numpy as np
 import source
 import cluster
 
+def calc_sep(ra1,dec1,ra2,dec2,degs=False):
+    """
+    Calculate angular separation between two points on celestial
+    sphere.
+    Give degs=True if units are in degrees and returns in deg
+    """
+    if degs:
+        ra1,ra2,dec1,dec2=np.deg2rad([ra1,ra2,dec1,dec2])
+        
+    sep = np.cos(np.pi/2.-dec1)*np.cos(np.pi/2.-dec2)
+    sep += np.sin(np.pi/2.-dec1)*np.sin(np.pi/2.-dec2)*np.cos(ra1-ra2)
+    sep = np.arccos(sep)
+    if degs:
+        sep = np.rad2deg(sep)
+    return sep
+
+def convert_sexid(sexid,dec=False):
+    """
+    Convert sexidecimal number to degrees
+    if dec=False (RA), assume sexid is hhmmss.ss
+    if dec=True (DEC), assume sexid is ddmmss.ss
+    """
+    modsexid = np.abs(sexid)
+    degrees = int(np.floor(modsexid/10000.))
+    modsexid -= degrees*10000.
+    mins = int(np.floor(modsexid/100.))
+    degrees += mins/60.
+    modsexid -= mins*100.
+    degrees += modsexid/3600.
+    # check if RA
+    if not dec: degrees = 15.*degrees # RA 15 degs per hour
+    # check if negative
+    if sexid < 0:
+        degrees = -1.*degrees
+    return degrees
+
 def main(**options):
     print("gain_calc.py {0}".format(vers))
     # Read in spectral fits and nvss fits
@@ -70,7 +106,33 @@ def main(**options):
                 continue
             data = np.load(cluster_file)
             clusters = data['clusters']
-            print clusters
+            # find the cluster that corresponds to the calibration source
+            best_cluster,best_cluster_num = None,-1
+            closest_pos = 999.
+            for num,clust in enumerate(clusters):
+                # compute distance between clust center and calib source
+                nvss_ra = convert_sexi(nvss_fit['RA'],dec=False)
+                nvss_dec = convert_sexi(nvss_fit['Dec'],dec=True)
+                sep = calc_sep(clust.RA,clust.DEC,nvss_ra,nvss_dec,deg=True)
+                if sep < closest_pos:
+                    closest_pos = sep
+                    best_cluster = clust
+                    best_cluster_num = num
+            if best_cluster is None:
+                print("Error: did not find any good clusters for
+                {0}, beam {1}, bin{2}".format(options['field'],
+                                              beam,bn))
+                continue
+            elif sep > 0.001:
+                print("Error: best cluster is more than 0.001 degrees
+                from NVSS center in {0}, beam {1}, bin {2}".\
+                format(options['field'],beam,bn))
+                continue
+            elif not clust.good_fit:
+                print("Error: best cluster does not have good fit
+                in {0}, beam {1}, bin {2}".\
+                format(options['field'],beam,bn))
+            print sep
             
     if options["verbose"]:
         print("Log: Done!")
