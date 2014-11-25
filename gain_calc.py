@@ -119,18 +119,18 @@ def main(**options):
                     best_cluster = clust
                     best_cluster_num = num
             if best_cluster is None:
-                print("Error: did not find any good clusters for
-                {0}, beam {1}, bin{2}".format(options['field'],
+                print("Error: did not find any good clusters for "
+                "{0}, beam {1}, bin{2}".format(options['field'],
                                               beam,bn))
                 continue
             elif sep > 0.001:
-                print("Error: best cluster is more than 0.001 degrees
-                from NVSS center in {0}, beam {1}, bin {2}".\
+                print("Error: best cluster is more than 0.001 degrees "
+                "from NVSS center in {0}, beam {1}, bin {2}".\
                 format(options['field'],beam,bn))
                 continue
             elif not clust.good_fit:
-                print("Error: best cluster does not have good fit
-                in {0}, beam {1}, bin {2}".\
+                print("Error: best cluster does not have good fit "
+                "in {0}, beam {1}, bin {2}".\
                 format(options['field'],beam,bn))
             print sep
             
