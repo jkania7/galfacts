@@ -128,6 +128,8 @@ def main(**options):
                 print("Error: best cluster is more than 0.001 degrees "
                 "from NVSS center in {0}, beam {1}, bin {2}".\
                 format(options['field'],beam,bn))
+                print(clust.center_RA,clust.center_DEC)
+                print(nvss_ra,nvss_dec)
                 print(sep)
                 continue
             elif not clust.good_fit:
