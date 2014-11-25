@@ -113,7 +113,7 @@ def main(**options):
                 # compute distance between clust center and calib source
                 nvss_ra = convert_sexid(nvss_fit['RA'],dec=False)
                 nvss_dec = convert_sexid(nvss_fit['Dec'],dec=True)
-                sep = calc_sep(clust.RA,clust.DEC,nvss_ra,nvss_dec,deg=True)
+                sep = calc_sep(clust.RA,clust.DEC,nvss_ra,nvss_dec,degs=True)
                 if sep < closest_pos:
                     closest_pos = sep
                     best_cluster = clust
