@@ -20,6 +20,7 @@ def calc_sep(ra1,dec1,ra2,dec2,degs=False):
     sphere.
     Give degs=True if units are in degrees and returns in deg
     """
+    print ra1,ra2,ra3,ra4
     if degs:
         ra1,ra2,dec1,dec2 = np.deg2rad([ra1,ra2,dec1,dec2])
         
