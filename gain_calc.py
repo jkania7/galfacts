@@ -20,7 +20,6 @@ def calc_sep(ra1,dec1,ra2,dec2,degs=False):
     sphere.
     Give degs=True if units are in degrees and returns in deg
     """
-    print ra1,ra2,ra3,ra4
     if degs:
         ra1,ra2,dec1,dec2 = np.deg2rad([ra1,ra2,dec1,dec2])
         
@@ -114,7 +113,8 @@ def main(**options):
                 # compute distance between clust center and calib source
                 nvss_ra = convert_sexid(nvss_fit['RA'],dec=False)
                 nvss_dec = convert_sexid(nvss_fit['Dec'],dec=True)
-                sep = calc_sep(clust.RA,clust.DEC,nvss_ra,nvss_dec,degs=True)
+                sep = calc_sep(clust.center_RA,clust.center_DEC,
+                               nvss_ra,nvss_dec,degs=True)
                 if sep < closest_pos:
                     closest_pos = sep
                     best_cluster = clust
