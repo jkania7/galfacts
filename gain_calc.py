@@ -111,8 +111,8 @@ def main(**options):
             closest_pos = 999.
             for num,clust in enumerate(clusters):
                 # compute distance between clust center and calib source
-                nvss_ra = convert_sexi(nvss_fit['RA'],dec=False)
-                nvss_dec = convert_sexi(nvss_fit['Dec'],dec=True)
+                nvss_ra = convert_sexid(nvss_fit['RA'],dec=False)
+                nvss_dec = convert_sexid(nvss_fit['Dec'],dec=True)
                 sep = calc_sep(clust.RA,clust.DEC,nvss_ra,nvss_dec,deg=True)
                 if sep < closest_pos:
                     closest_pos = sep
