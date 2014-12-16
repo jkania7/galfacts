@@ -84,14 +84,19 @@ def main(**options):
         try:
             # estimate mean shift bandwidth
             # need to correct for cosine dec.
+            print("Dec ={0}".format(DEC))
             X = np.array(zip(RA*np.cos(np.deg2rad(DEC)), DEC))
+            print("X= {0}".format(X)) 
+            print("type(X[1])={0}".format(type(X[1])))
+            print("len(X)= {0}".format(len(X)))
+            print("options[quantile] = {0}".format(options["quantile"]))
             bandwidth = estimate_bandwidth(X,
                                            quantile=options["quantile"],
                                            n_samples=len(X))
             if options["verbose"]:
                 print("Log: found bandwidth {0}".format(bandwidth))
-            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
-            #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3)
+            #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
+            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3)
             ms.fit(X)
             labels = ms.labels_
             centers = ms.cluster_centers_
