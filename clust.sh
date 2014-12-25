@@ -1,46 +1,47 @@
 #!/bin/sh
 
-#Created by jwk to run make_clusters.py on 15 July 2014, improved 26 July 2014, make user specific 16 Aug 2014,22 Oct all calibrators 
+#Created by jwk to run make_clusters.py on 15 July 2014, improved 26 July 2014, make user specific 16 Aug 2014,22 Oct all calibrator, 16 Dec variables added 
 # Modified by tvw to add his stuff too
 
 
 if [ "$USER" = "jkania" ]; then 
 quant=0.06
 width=0.025
-outpath="/n/fox/jkania/results_cluster/beam"
+outpath="/n/fox/jkania/cluster/beam"
 inpath="/n/fox/jkania/results/"
-logpath="/n/fox/jkania/results/clusterout"
+logpath="/n/fox/jkania/cluster/log"
+mkdir -p $logpath
     for i in 0 #1 2 3 4 5 6
     do
 :<<'END'
 	python make_clusters.py --field S0957+161 --dates 55183 55184 55188 55189 55191 55192 55193 5519 4\
-	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
-	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
-	    > /n/fox/jkania/results_cluster/clusterout/S0957+161_beam"$i"_out.dat &
+	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
+	    --source_filepath $inpath --cluster_filepath $outpath$i \
+            > $logout/S0957+161_beam"$i"_log.dat &
 
 	python make_clusters.py --field S1009+140 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
-	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
-	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
-	    > /n/fox/jkania/results_cluster/clusterout/S1009+140_beam"$i"_out.dat &
+	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
+	    --source_filepath $inpath --cluster_filepath $outpath$i \
+	    > logpath/S1009+140_beam"$i"_log.dat &
 
 	python make_clusters.py --field S1026+064 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
-	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
-	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
-	    > /n/fox/jkania/results_cluster/clusterout/S1026+064_beam"$i"_out.dat &
+	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
+	    --source_filepath $inpath --cluster_filepath $outpath$i \
+	    > $logpath/S1026+064_beam"$i"_log.dat &
 
 	python make_clusters.py --field S1041+027 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
-	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
-	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
-	    > /n/fox/jkania/results_cluster/clusterout/S1047+027_beam"$i"_out.dat &
+	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
+	    --source_filepath $inpath --cluster_filepath $outpath$i \
+	    > logpath/S1047+027_beam"$i"_log.dat &
 
 	python make_clusters.py --field S1054+032 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
-	    --beams "$i"  --verbose --file_verbose --quantile 0.06 --beam_width 0.025 \
-	    --source_filepath /n/fox/jkania/results --cluster_filepath /n/fox/jkania/results_cluster/beam"$i" \
-	    > /n/fox/jkania/results_cluster/clusterout/S1047+027_beam"$i"_out.dat &
+	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
+	    --source_filepath $inpath --cluster_filepath $outpath$i \
+	    > logpath/S1047+027_beam"$i"_log.dat &
 END
-	#python make_clusters.py --field S1106-008 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
-	 #   --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
-	 #   --source_filepath $inpath --cluster_filepath $outpath$i #> $logpath/S1106-008_beam"$i"_log.dat &
+	python make_clusters.py --field S1106-008 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
+	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
+	    --source_filepath $inpath --cluster_filepath $outpath$i > $logpath/S1106-008_beam"$i"_log.dat &
 :<<'END' 
 	python make_clusters.py --field S1123+055  --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
@@ -48,8 +49,8 @@ END
 END
 	python make_clusters.py --field S1135-003 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
-	    --source_filepath /n/fox/jkania/results --cluster_filepath $outpath$i
-	    #> $logpath/S1135-003_beam"$i"_log.dat &
+	    --source_filepath /n/fox/jkania/results --cluster_filepath $outpath$i \
+	    > $logpath/S1135-003_beam"$i"_log.dat &
 
     #wait #so not to use up all of fox's resorces 
     done

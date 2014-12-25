@@ -2,7 +2,11 @@
 #make sure you have a clean /runout/ folder
 
 #!/bin/sh
-:<<'END'
+beams = 0 1 2 3 4 5 6
+exclude = 2748 2749 2750 2751 2752 2753
+inpath = /n/fox/processed/S1_CALS
+logpath = /n/fox/jkania/results/log
+:<<'END' 
 for i in 55183 55184 55188 55189 55191 55192 55193 55194
 do
     python find_sources.py --field S0957+161  --band band0 --date "$i" \
@@ -73,14 +77,14 @@ do
 done 
 END
 
-for i in 55183 #55184 55187 55188 55189 55191 55192 55193 
+for i in 55183 55184 55187 55188 55189 55191 55192 55193 
 do
     python find_sources.py --field S1135-003 --band band0 --date "$i" \
-        --beam 0   --verbose --file_verbose \
-        --exclude_channels  2748 2749 2750 2751 2752 2753  \
-        --data_filepath /n/fox/processed/S1_CALS  --format binary \
+        --beam $beams   --verbose --file_verbose \
+        --exclude_channels  $exclude  \
+        --data_filepath $inpath  --format binary \
 	--min_RA 172.50 --max_RA 174.75 --min_DEC -0.60 --max_DEC -0.10 --results_filepath ../test
-    #> /n/fox/jkania/results/runout/S1135-003_"$i"_runout.dat &
+    > $logpath/S1135-003_"$i"_runout.dat &
 done 
 
 wait #to get the timing right
