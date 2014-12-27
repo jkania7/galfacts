@@ -7,17 +7,18 @@
 if [ "$USER" = "jkania" ]; then 
 quant=0.06
 width=0.025
-outpath="/n/fox/jkania/cluster/beam"
+outpath="/n/fox/jkania/cluster_test_2/beam"
 inpath="/n/fox/jkania/results/"
-logpath="/n/fox/jkania/cluster/log"
+#inpath="/n/fox/jkania/test/"
+logpath="/n/fox/jkania/cluster_test_2/log"
 mkdir -p $logpath
-    for i in 0 #1 2 3 4 5 6
+
+    for i in 0 1 2 3 4 5 6
     do
-:<<'END'
 	python make_clusters.py --field S0957+161 --dates 55183 55184 55188 55189 55191 55192 55193 5519 4\
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath $inpath --cluster_filepath $outpath$i \
-            > $logout/S0957+161_beam"$i"_log.dat &
+            > $logpath/S0957+161_beam"$i"_log.dat &
 
 	python make_clusters.py --field S1009+140 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
@@ -38,21 +39,21 @@ mkdir -p $logpath
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath $inpath --cluster_filepath $outpath$i \
 	    > logpath/S1047+027_beam"$i"_log.dat &
-END
+
 	python make_clusters.py --field S1106-008 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath $inpath --cluster_filepath $outpath$i > $logpath/S1106-008_beam"$i"_log.dat &
-:<<'END' 
+
 	python make_clusters.py --field S1123+055  --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
-	    --source_filepath $inpath --cluster_filepath $outpath$i> $logout/S1123+055_beam"$i"_log.dat &
-END
+	    --source_filepath $inpath --cluster_filepath $outpath$i> $logpath/S1123+055_beam"$i"_log.dat &
+	
 	python make_clusters.py --field S1135-003 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath /n/fox/jkania/results --cluster_filepath $outpath$i \
 	    > $logpath/S1135-003_beam"$i"_log.dat &
 
-    #wait #so not to use up all of fox's resorces 
+    wait #so not to use up all of fox's resorces 
     done
 
 
