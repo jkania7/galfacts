@@ -5,16 +5,17 @@
 
 
 if [ "$USER" = "jkania" ]; then 
-quant=0.06
+quant=0.08
 width=0.025
-outpath="/n/fox/jkania/cluster_test_2/beam"
-inpath="/n/fox/jkania/results/"
-#inpath="/n/fox/jkania/test/"
-logpath="/n/fox/jkania/cluster_test_2/log"
+outpath="/n/fox/jkania/cluster_test08/beam"
+#inpath="/n/fox/jkania/results/"
+inpath="/n/fox/jkania/test/"
+logpath="/n/fox/jkania/cluster_test08/log"
 mkdir -p $logpath
 
     for i in 0 1 2 3 4 5 6
     do
+
 	python make_clusters.py --field S0957+161 --dates 55183 55184 55188 55189 55191 55192 55193 5519 4\
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath $inpath --cluster_filepath $outpath$i \
@@ -23,7 +24,7 @@ mkdir -p $logpath
 	python make_clusters.py --field S1009+140 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath $inpath --cluster_filepath $outpath$i \
-	    > logpath/S1009+140_beam"$i"_log.dat &
+	    > $logpath/S1009+140_beam"$i"_log.dat &
 
 	python make_clusters.py --field S1026+064 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
@@ -33,21 +34,23 @@ mkdir -p $logpath
 	python make_clusters.py --field S1041+027 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath $inpath --cluster_filepath $outpath$i \
-	    > logpath/S1047+027_beam"$i"_log.dat &
+	    > $logpath/S1047+027_beam"$i"_log.dat &
 
 	python make_clusters.py --field S1054+032 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath $inpath --cluster_filepath $outpath$i \
-	    > logpath/S1047+027_beam"$i"_log.dat &
-
+	    > $logpath/S1047+027_beam"$i"_log.dat &
+	  
 	python make_clusters.py --field S1106-008 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
-	    --source_filepath $inpath --cluster_filepath $outpath$i > $logpath/S1106-008_beam"$i"_log.dat &
+	    --source_filepath $inpath --cluster_filepath $outpath$i \
+	    > $logpath/S1106-008_beam"$i"_log.dat &
 
 	python make_clusters.py --field S1123+055  --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
-	    --source_filepath $inpath --cluster_filepath $outpath$i> $logpath/S1123+055_beam"$i"_log.dat &
-	
+	    --source_filepath $inpath --cluster_filepath $outpath$i \
+	    > $logpath/S1123+055_beam"$i"_log.dat &
+
 	python make_clusters.py --field S1135-003 --dates 55183 55184 55187 55188 55189 55191 55192 55193 \
 	    --beams $i  --verbose --file_verbose --quantile $quant --beam_width $width \
 	    --source_filepath /n/fox/jkania/results --cluster_filepath $outpath$i \
@@ -55,7 +58,6 @@ mkdir -p $logpath
 
     wait #so not to use up all of fox's resorces 
     done
-
 
 elif [ "$USER" = "tghosh" ]; then
     #rm -r /n/fox/jkania/results_cluster

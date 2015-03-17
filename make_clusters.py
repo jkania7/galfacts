@@ -84,20 +84,30 @@ def main(**options):
         try:
             # estimate mean shift bandwidth
             # need to correct for cosine dec.
-            print("Dec ={0}".format(DEC))
+            #print("Dec ={0}".format(DEC))
             X = np.array(zip(RA*np.cos(np.deg2rad(DEC)), DEC))
-            print("X= {0}".format(X))
-            print("X[1] = {0}".format(X[1]))
-            print("type(X[1])={0}".format(type(X[1])))
-            print("len(X)= {0}".format(len(X)))
-            print("options[quantile] = {0}".format(options["quantile"]))
+            #print("X.shape = {0}".format(X.shape))
+            #print("X[1].shape = {0}".format(X[1].shape))
+            #print("X= {0}".format(X))
+            #print("X[1] = {0}".format(X[1]))
+            #print("type(X[1])={0}".format(type(X[1])))
+            #print("len(X)= {0}".format(len(X)))
+            #with open("X.txt","w") as f:
+            #f.write("X=")                               
+            #f.write("{0}".format(X))
+            
+            #with open('X', 'w') as f:
+            #    f.write('X')
+            #    f.write(X)
+            #print("options[quantile] = {0}".format(options["quantile"]))
+            #print("type(X[1][1]) = {0}".format(type(X[1][1])))
             bandwidth = estimate_bandwidth(X,
                                            quantile=options["quantile"],
                                            n_samples=len(X))
             if options["verbose"]:
                 print("Log: found bandwidth {0}".format(bandwidth))
             #ms = MeanShift(bandwidth=bandwidth,bin_seeding=True, min_bin_freq=3, cluster_all=False)
-            ms = MeanShift(bandwidth=bandwidth,bin_seeding=True)
+            ms = MeanShift(bin_seeding=True)
             ms.fit(X)
             labels = ms.labels_
             centers = ms.cluster_centers_
@@ -105,10 +115,10 @@ def main(**options):
             n_clusters = len(labels_unique)
             if options["verbose"]:
                 print("Log: found {0} clusters.".format(n_clusters))
-            if options["file_verbose"]:
-                plt.field_plot(RA, DEC, I_data,
-                            my_out_dir+"/clustered.png",
-                            labels=labels, centers=centers)
+                if options["file_verbose"]:
+                    plt.field_plot(RA, DEC, I_data,
+                                   my_out_dir+"/clustered.png",
+                                   labels=labels, centers=centers)
         except ValueError:
             if options["verbose"]:
                 print("Log: Could not implement clustering!")
